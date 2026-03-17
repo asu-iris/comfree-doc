@@ -80,6 +80,14 @@ If something behaves unexpectedly at import time or during setup, verify the MuJ
 
 If you are using deeper MJWarp helper APIs, the interface may still be available, but the ComFree docs may not cover those paths in detail.
 
+## 8. Solver differences affect some MuJoCo XML constraint settings
+
+Because ComFree uses a different constraint solver than MuJoCo's built-in solver, some constraint-based configuration specified directly in MuJoCo XML (for example `joint` attributes such as `frictionloss`) may not have the same effect in `comfree_warp`. We will continue improving coverage of these XML parameters; if you rely on solver-specific settings, please verify behavior and report any regressions.
+
+## 9. Torsional and rolling friction coefficient scaling may differ from MuJoCo
+
+The scale (magnitude) of torsional and rolling friction coefficients can differ between `comfree_warp` and MuJoCo. These coefficients may require fine-tuning before deployment to achieve behavior that matches MuJoCo.
+
 ## Practical Advice
 
 If something seems wrong, check these first:
