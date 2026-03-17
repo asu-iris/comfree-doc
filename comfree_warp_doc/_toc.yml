@@ -11,4 +11,5 @@ parts:
   - file: pages/cfwarp-usage
   - file: pages/cfwarp-params
   - file: pages/difference
+  - file: pages/headless-streaming
   - file: pages/known-issues
