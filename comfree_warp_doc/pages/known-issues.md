@@ -60,9 +60,13 @@ Recommendation:
 The current source includes compatibility logic around:
 
 - `warp-lang >= 1.12`
-- `mujoco > 3.4.0`
+- `mujoco == 3.5.0`
 
-This means older dependency versions may require extra caution.
+MuJoCo internal data structure updates across versions may introduce compatibility issues in `comfree_warp`.
+
+This means older or newer dependency versions may require extra caution.
+
+We plan to continue adding fixes so that future MuJoCo versions are better supported.
 
 If something behaves unexpectedly at import time or during setup, verify the MuJoCo and Warp versions first.
 

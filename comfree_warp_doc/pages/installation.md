@@ -50,7 +50,7 @@ pip install -e .
 
 ### Option 2: Using uv
 
-`uv` is a fast Python package and environment manager. If your `comfree_warp` checkout defines dependencies in `pyproject.toml`, `uv` can install them together:
+`uv` is a fast Python package and environment manager. `uv` can be used to install the dependencies:
 
 ```bash
 git clone https://github.com/asu-iris/comfree_warp.git
@@ -80,16 +80,15 @@ The current source tree does not include a pinned package metadata file in this 
 What the source does show is:
 
 - the codebase includes compatibility logic around `warp-lang >= 1.12`
-- the codebase includes compatibility logic around `mujoco > 3.4.0`
+- the codebase includes compatibility logic around `mujoco == 3.5.0`
 - the documentation build uses Python 3.10
 
 In practice, a safe starting point is:
 
 - Python 3.10
-- a recent `mujoco` release in the 3.4+ range
+- a recent `mujoco` release in 3.5.0
 - a recent `warp-lang` release around the 1.12+ range
 
-If you maintain this repository, the best next improvement is to replace this section with the exact MuJoCo and Warp versions you have validated on your target platform.
 
 ## Import Note
 
