@@ -116,10 +116,10 @@ if streamer.enabled:
 
 ### Streaming Client Setup
 
-Connect to a remote stream using the test viewer:
+Connect to a remote stream using the local viewer:
 
 ```bash
-python test_viewer.py --host <remote_host> --port <port>
+python local_viewer.py --host <remote_host> --port <port>
 ```
 
 The viewer will:
@@ -137,8 +137,8 @@ To view a simulation on a remote server, use SSH port forwarding:
 # On your local machine, create a tunnel to the remote server
 ssh -L 6000:127.0.0.1:6000 user@remote-server
 
-# In another terminal, run the test viewer
-python test_viewer.py --host 127.0.0.1 --port 6000
+# In another terminal, run the local viewer
+python local_viewer.py --host 127.0.0.1 --port 6000
 ```
 
 This forwards local port 6000 to the remote server's port 6000, allowing secure access to the streaming server.
@@ -146,20 +146,164 @@ This forwards local port 6000 to the remote server's port 6000, allowing secure 
 ### Streaming Client Options
 
 ```
-usage: test_viewer.py [-h] [--host HOST] [--port PORT] [--retry-delay DELAY]
+usage: local_viewer.py [-h] [--host HOST] [--port PORT] [--retry-delay DELAY]
 
 options:
-  --host HOST              Remote host (default: 127.0.0.1)
+  --host HOST              Remote host (pair with ssh -L, default: 127.0.0.1)
   --port PORT              TCP port exposed by the remote streamer (default: 6001)
   --retry-delay DELAY      Seconds to wait before retrying after disconnect (default: 2.0)
 ```
 
 **Example with custom port and retry delay:**
 ```bash
-python test_viewer.py --host remote.server.com --port 6000 --retry-delay 5.0
+python local_viewer.py --host remote.server.com --port 6000 --retry-delay 5.0
 ```
 
-## Workflow Examples
+### Local Viewer Implementation
+
+The `local_viewer.py` is a **client-side** viewer that connects to the streaming server and displays simulation states in real-time. It uses utilities from `streaming.py`.
+
+#### Key Components from streaming.py (Client Side)
+
+```python
+def recv_packet(sock: socket.socket):
+    """Receive a packet from the streaming server."""
+    header = _recvall(sock, _HEADER.size)
+    (length,) = _HEADER.unpack(header)
+    payload = _recvall(sock, length)
+    return pickle.loads(payload)
+
+def apply_mjdata(mjd: mujoco.MjData, state) -> None:
+    """Apply received state to MuJoCo data structure."""
+    mjd.time = state.get("time", mjd.time)
+    if "qpos" in state:
+        np.copyto(mjd.qpos, state["qpos"])
+    if "qvel" in state:
+        np.copyto(mjd.qvel, state["qvel"])
+    if "act" in state:
+        np.copyto(mjd.act, state["act"])
+    if "ctrl" in state:
+        np.copyto(mjd.ctrl, state["ctrl"])
+```
+
+#### Client Machine: local_viewer.py
+
+The viewer runs on the **client machine** with the display. It:
+1. Connects to the server via TCP socket
+2. Receives the model (path or XML)
+3. Receives state updates and applies them to MuJoCo
+4. Renders each state in the MuJoCo viewer
+
+```python
+import socket
+import mujoco
+import mujoco.viewer
+import streaming as mjstream
+
+def _stream_once(sock):
+    # Receive model information from server
+    first_packet = mjstream.recv_packet(sock)
+    kind = first_packet.get("kind")
+    if kind == "model_path":
+        model_path = first_packet["path"]
+        print(f"Loading model from path: {model_path}")
+        mjm = mujoco.MjSpec.from_file(model_path).compile()
+    elif kind == "xml":
+        print("Loading model from XML blob")
+        mjm = mujoco.MjSpec.from_string(first_packet["xml"]).compile()
+    
+    mjd = mujoco.MjData(mjm)
+    mujoco.mj_forward(mjm, mjd)
+
+    # Launch viewer
+    viewer = mujoco.viewer.launch_passive(mjm, mjd)
+    with viewer:
+        while True:
+            try:
+                packet = mjstream.recv_packet(sock)
+            except ConnectionError as exc:
+                print(f"Connection lost: {exc}")
+                break
+            
+            kind = packet.get("kind")
+            if kind == "close":
+                break
+            if kind != "state":
+                continue
+            
+            # Apply received state to local MuJoCo data
+            mjstream.apply_mjdata(mjd, packet["state"])
+            mujoco.mj_forward(mjm, mjd)
+            viewer.sync()  # Update display
+
+def main():
+    parser = argparse.ArgumentParser(description="Connect to streaming server and view simulation")
+    parser.add_argument("--host", default="127.0.0.1", help="Server host")
+    parser.add_argument("--port", type=int, default=6001, help="Server port")
+    parser.add_argument("--retry-delay", type=float, default=2.0, help="Retry delay on disconnect")
+    args = parser.parse_args()
+
+    print(f"Connecting to {args.host}:{args.port}...")
+    while True:
+        try:
+            with socket.create_connection((args.host, args.port)) as sock:
+                print("Connected. Rendering stream...")
+                _stream_once(sock)
+        except KeyboardInterrupt:
+            print("\nStopped.")
+            break
+        except OSError as exc:
+            print(f"Connection failed: {exc}")
+            print(f"Retrying in {args.retry_delay}s...")
+            time.sleep(args.retry_delay)
+```
+
+#### Server Machine: test_headless.py Usage
+
+The server runs on the **server machine** (usually compute cluster):
+
+```python
+import streaming as mjstream
+
+# Server side: pack and send state
+def pack_mjdata(mjd: mujoco.MjData):
+    """Package MuJoCo data for transmission to client."""
+    return {
+        "time": float(mjd.time),
+        "qpos": np.array(mjd.qpos, copy=True),
+        "qvel": np.array(mjd.qvel, copy=True),
+        "act": np.array(mjd.act, copy=True),
+        "ctrl": np.array(mjd.ctrl, copy=True),
+        "xfrc_applied": np.array(mjd.xfrc_applied, copy=True),
+    }
+
+# In your headless simulation loop
+streamer = mjstream.StreamServer(model_path=model_path, host="0.0.0.0", port=6000)
+streamer.start()  # Wait for client connection
+
+for step in range(num_steps):
+    # Run simulation...
+    mjwarp.step(m, d)
+    
+    # Send state to connected client
+    if streamer.connected:
+        streamer.send_state(mjd)
+```
+
+**Key Distinction:**
+- **Server Machine**: Runs `test_headless.py` - executes the simulation, sends state packets
+- **Client Machine**: Runs `local_viewer.py` - receives packets, renders in MuJoCo viewer
+
+### Alternative: test_viewer.py (Local Viewer)
+
+The `test_viewer.py` script is a **standalone local viewer** that runs on a single machine with the simulation. Unlike `local_viewer.py`, it does not connect to a remote streaming server. Instead, it:
+- Loads a model locally
+- Runs a simulation using the same engines (MJC, MJWARP, or COMFREE_WARP)
+- Displays the simulation in real-time using MuJoCo's passive viewer
+
+This is useful for debugging locally before deploying to remote headless simulation, or for benchmarking with visualization.
+
+
 
 ### Example 1: Local Headless Simulation with Streaming
 
@@ -172,7 +316,7 @@ python test_headless.py
 
 **Terminal 2 - View the stream locally:**
 ```bash
-python test_viewer.py --host 127.0.0.1 --port 6000
+python local_viewer.py --host 127.0.0.1 --port 6000
 ```
 
 ### Example 2: Remote Simulation with SSH Tunnel
@@ -192,7 +336,7 @@ ssh -L 6000:127.0.0.1:6000 user@remote-server
 
 **Terminal 3 - View the stream:**
 ```bash
-python test_viewer.py --host 127.0.0.1 --port 6000
+python local_viewer.py --host 127.0.0.1 --port 6000
 ```
 
 ### Example 3: Benchmark Multiple Models
