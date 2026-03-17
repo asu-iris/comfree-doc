@@ -1,0 +1,14 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+- caption: ComFree Warp
+  chapters:
+  - file: pages/installation
+  - file: pages/mjwarp-usage
+  - file: pages/cfwarp-usage
+  - file: pages/cfwarp-params
+  - file: pages/difference
+  - file: pages/known-issues

@@ -1,0 +1,736 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>How ComFree Warp Differs from MuJoCo Warp &#8212; ComFree Warp Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/difference';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Known Issues" href="known-issues.html" />
+    <link rel="prev" title="ComFree Contact Parameter Settings" href="cfwarp-params.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/comfree_logo.png" class="logo__image only-light" alt="ComFree Warp Documentation - Home"/>
+    <script>document.write(`<img src="../_static/comfree_logo.png" class="logo__image only-dark" alt="ComFree Warp Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    ComFree Sim
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mjwarp-usage.html">MJWarp Preliminary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-usage.html">ComFree Warp Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameter Settings</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">How ComFree Warp Differs from MuJoCo Warp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="known-issues.html">Known Issues</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/asu-iris/comfree-sim-doc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/asu-iris/comfree-sim-doc/issues/new?title=Issue%20on%20page%20%2Fpages/difference.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/pages/difference.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>How ComFree Warp Differs from MuJoCo Warp</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-from-the-public-api">Start from the Public API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-provided-apis">ComFree-provided APIs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unchanged-mjwarp-re-exports">Unchanged MJWarp Re-exports</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-stays-the-same">What Stays the Same</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-migration">Typical Migration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changes">What Changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-and-forward"><code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model"><code class="docutils literal notranslate"><span class="pre">put_model</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-make-data-and-get-data-into"><code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data"><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-by-function-summary">Function-by-Function Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-guide">Reading Guide</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="how-comfree-warp-differs-from-mujoco-warp">
+<h1>How ComFree Warp Differs from MuJoCo Warp<a class="headerlink" href="#how-comfree-warp-differs-from-mujoco-warp" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is designed to feel familiar to users of <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>. For most day-to-day usage, it should feel like the same interface, with ComFree-specific behavior added underneath.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The quickest way to think about <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is:</p>
+<ul class="simple">
+<li><p>the overall workflow is almost the same as <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code></p></li>
+<li><p>many top-level function names are the same</p></li>
+<li><p>for most core APIs, the input and output usage stays the same</p></li>
+<li><p>the most important behavioral differences are in the ComFree solver path</p></li>
+</ul>
+<p>So <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> should mostly read like a drop-in alternative, not like a completely different API.</p>
+</div>
+<section id="start-from-the-public-api">
+<h2>Start from the Public API<a class="headerlink" href="#start-from-the-public-api" title="Link to this heading">#</a></h2>
+<p>The cleanest way to understand the differences is to start from <code class="docutils literal notranslate"><span class="pre">comfree_warp/__init__.py</span></code>, because that file shows what the package exposes to users.</p>
+<p>At the top level, the exported APIs fall into two groups.</p>
+<section id="comfree-provided-apis">
+<h3>ComFree-provided APIs<a class="headerlink" href="#comfree-provided-apis" title="Link to this heading">#</a></h3>
+<p>These are the APIs that <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> provides from its own implementation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">put_model</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">put_data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make_data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">forward</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Model</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make_constraint</span></code></p></li>
+</ul>
+<p>These are the most important APIs to compare against <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>. However, for most of them, the user-facing call pattern remains the same.</p>
+</section>
+<section id="unchanged-mjwarp-re-exports">
+<h3>Unchanged MJWarp Re-exports<a class="headerlink" href="#unchanged-mjwarp-re-exports" title="Link to this heading">#</a></h3>
+<p>Many other public names are re-exported directly from <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, including:</p>
+<ul class="simple">
+<li><p>collision and broadphase helpers</p></li>
+<li><p>rendering and ray-query helpers</p></li>
+<li><p>smooth dynamics helpers</p></li>
+<li><p>sensor helpers</p></li>
+<li><p>shared types and enums</p></li>
+</ul>
+<p>These are mainly preserved so that the package stays familiar and compatible with MJWarp-style code.</p>
+</section>
+</section>
+<section id="what-stays-the-same">
+<h2>What Stays the Same<a class="headerlink" href="#what-stays-the-same" title="Link to this heading">#</a></h2>
+<p>The main simulation workflow remains almost the same:</p>
+<ol class="arabic simple">
+<li><p>Load a MuJoCo model with <code class="docutils literal notranslate"><span class="pre">mujoco</span></code>.</p></li>
+<li><p>Convert it with <code class="docutils literal notranslate"><span class="pre">put_model</span></code> and <code class="docutils literal notranslate"><span class="pre">put_data</span></code>.</p></li>
+<li><p>Run simulation with <code class="docutils literal notranslate"><span class="pre">step</span></code> or <code class="docutils literal notranslate"><span class="pre">forward</span></code>.</p></li>
+<li><p>Copy data back with <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code> if needed.</p></li>
+</ol>
+<p>That is why most MJWarp code can be adapted with only very small changes.</p>
+<section id="typical-migration">
+<h3>Typical Migration<a class="headerlink" href="#typical-migration" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MJWarp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mujoco_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mjwarp</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">mjwarp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">mjwarp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">mjwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">mjwarp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="c1"># ComFree Warp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
+    <span class="n">mjm</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">comfree_warp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">comfree_warp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="what-changes">
+<h2>What Changes<a class="headerlink" href="#what-changes" title="Link to this heading">#</a></h2>
+<p>Before looking at the detailed differences, the most important compatibility point is this:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code>, <code class="docutils literal notranslate"><span class="pre">reset_data</span></code>, <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">forward</span></code>, <code class="docutils literal notranslate"><span class="pre">Model</span></code>, <code class="docutils literal notranslate"><span class="pre">Data</span></code>, and <code class="docutils literal notranslate"><span class="pre">make_constraint</span></code>, <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is intended to keep the same user-facing role as <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>.</p>
+<p>In practice, the main API-level extension users usually notice is on <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code>, which adds <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>.</p>
+<p>For the rest, the function names, expected arguments, and overall input/output usage are intended to feel the same, even though the internal implementation may be extended or replaced.</p>
+</div>
+<section id="step-and-forward">
+<h3><code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code><a class="headerlink" href="#step-and-forward" title="Link to this heading">#</a></h3>
+<p>These are the most important implementation differences.</p>
+<p>Although the function names and user-facing usage are the same, <code class="docutils literal notranslate"><span class="pre">comfree_warp.step(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_warp.forward(...)</span></code> do not run the original MJWarp physics pipeline. They run the ComFree solver and ComFree forward pipeline instead.</p>
+<p>If you want to know where the simulator behavior really changes, start here.</p>
+</section>
+<section id="put-model">
+<h3><code class="docutils literal notranslate"><span class="pre">put_model</span></code><a class="headerlink" href="#put-model" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> is the clearest user-visible API extension.</p>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp.put_model(...)</span></code> extends the MJWarp-style API by adding:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></p></li>
+</ul>
+<p>These are the main new user-facing inputs for ComFree contact behavior.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
+    <span class="n">mjm</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="put-data-make-data-and-get-data-into">
+<h3><code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code><a class="headerlink" href="#put-data-make-data-and-get-data-into" title="Link to this heading">#</a></h3>
+<p>These functions still follow the MJWarp workflow and are meant to be used in the same way, but they extend the underlying Warp-side data structures with extra ComFree-related fields needed by the solver.</p>
+<p>In normal usage, this is handled automatically. From the user side, they should still feel like the same API calls.</p>
+</section>
+<section id="reset-data">
+<h3><code class="docutils literal notranslate"><span class="pre">reset_data</span></code><a class="headerlink" href="#reset-data" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">reset_data</span></code> keeps the same role as in MJWarp and is effectively used in the same way.</p>
+</section>
+</section>
+<section id="function-by-function-summary">
+<h2>Function-by-Function Summary<a class="headerlink" href="#function-by-function-summary" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Relationship to <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code></p></th>
+<th class="head"><p>What it means for users</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">put_model</span></code></p></td>
+<td><p>Extended</p></td>
+<td><p>Same role as MJWarp, with extra ComFree parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">put_data</span></code></p></td>
+<td><p>Extended</p></td>
+<td><p>Same usage pattern as MJWarp</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">make_data</span></code></p></td>
+<td><p>Extended</p></td>
+<td><p>Same usage pattern as MJWarp</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></p></td>
+<td><p>Extended</p></td>
+<td><p>Same usage pattern as MJWarp</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></p></td>
+<td><p>Delegated</p></td>
+<td><p>Same usage pattern as MJWarp</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">step</span></code></p></td>
+<td><p>Replaced internally</p></td>
+<td><p>Same user-facing call, different solver behavior underneath</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">forward</span></code></p></td>
+<td><p>Replaced internally</p></td>
+<td><p>Same user-facing call, different forward behavior underneath</p></td>
+</tr>
+<tr class="row-odd"><td><p>many other helpers exported in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code></p></td>
+<td><p>Unchanged re-export</p></td>
+<td><p>Mostly kept for compatibility and familiarity</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="reading-guide">
+<h2>Reading Guide<a class="headerlink" href="#reading-guide" title="Link to this heading">#</a></h2>
+<p>If you already know MJWarp, the most useful mental model is:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> keeps the same outer workflow</p></li>
+<li><p>for most core APIs, the user-facing input/output pattern stays the same</p></li>
+<li><p>ComFree mainly changes the engine-facing solver path</p></li>
+<li><p>many helper APIs are still available in familiar form</p></li>
+</ul>
+<p>That is why <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> feels close to MJWarp while still being a different simulator backend.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./pages"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="cfwarp-params.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">ComFree Contact Parameter Settings</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="known-issues.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Known Issues</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-from-the-public-api">Start from the Public API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-provided-apis">ComFree-provided APIs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unchanged-mjwarp-re-exports">Unchanged MJWarp Re-exports</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-stays-the-same">What Stays the Same</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-migration">Typical Migration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changes">What Changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-and-forward"><code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model"><code class="docutils literal notranslate"><span class="pre">put_model</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-make-data-and-get-data-into"><code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data"><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-by-function-summary">Function-by-Function Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-guide">Reading Guide</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By ASU IRIS Lab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

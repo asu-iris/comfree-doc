@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ComFree Warp Usage &#8212; ComFree Warp Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/cfwarp-usage';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ComFree Contact Parameter Settings" href="cfwarp-params.html" />
+    <link rel="prev" title="MJWarp Preliminary" href="mjwarp-usage.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/comfree_logo.png" class="logo__image only-light" alt="ComFree Warp Documentation - Home"/>
+    <script>document.write(`<img src="../_static/comfree_logo.png" class="logo__image only-dark" alt="ComFree Warp Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    ComFree Sim
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mjwarp-usage.html">MJWarp Preliminary</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">ComFree Warp Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameter Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="known-issues.html">Known Issues</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/asu-iris/comfree-sim-doc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/asu-iris/comfree-sim-doc/issues/new?title=Issue%20on%20page%20%2Fpages/cfwarp-usage.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/pages/cfwarp-usage.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>ComFree Warp Usage</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-example">Minimal Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-apis">Core APIs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model-mjspec-comfree-stiffness-0-1-comfree-damping-0-001"><code class="docutils literal notranslate"><span class="pre">put_model(mjspec,</span> <span class="pre">comfree_stiffness=0.1,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-mjspec-mjdata-nworld-1-nconmax-1000-njmax-5000"><code class="docutils literal notranslate"><span class="pre">put_data(mjspec,</span> <span class="pre">mjdata,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-data-mjspec-nworld-1-nconmax-1000-njmax-5000"><code class="docutils literal notranslate"><span class="pre">make_data(mjspec,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-data-into-mjdata-mjspec-warp-data"><code class="docutils literal notranslate"><span class="pre">get_data_into(mjdata,</span> <span class="pre">mjspec,</span> <span class="pre">warp_data)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data-mjspec-warp-data"><code class="docutils literal notranslate"><span class="pre">reset_data(mjspec,</span> <span class="pre">warp_data)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-model-data"><code class="docutils literal notranslate"><span class="pre">step(model,</span> <span class="pre">data)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-model-data"><code class="docutils literal notranslate"><span class="pre">forward(model,</span> <span class="pre">data)</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-example">Batch Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="comfree-warp-usage">
+<h1>ComFree Warp Usage<a class="headerlink" href="#comfree-warp-usage" title="Link to this heading">#</a></h1>
+<p>This page shows how to use the <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> API directly.</p>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> keeps the same overall workflow as <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, but replaces the core solver path with the ComFree formulation. In practice, that means you still use the familiar sequence:</p>
+<ol class="arabic simple">
+<li><p>Load a MuJoCo model.</p></li>
+<li><p>Convert it with <code class="docutils literal notranslate"><span class="pre">put_model</span></code> and <code class="docutils literal notranslate"><span class="pre">put_data</span></code>.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">step</span></code> or <code class="docutils literal notranslate"><span class="pre">forward</span></code>.</p></li>
+<li><p>Copy data back with <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code> if needed.</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is intended to be a near drop-in alternative to <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>.</p>
+<p>For most core APIs, the user-facing call pattern stays the same. The main user-visible extension is on <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code>, which adds optional ComFree parameters such as <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>.</p>
+<p>See <a class="reference internal" href="cfwarp-params.html"><span class="std std-doc">ComFree Contact Params Setting</span></a> for how these parameters are set and interpreted.</p>
+</div>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfwarp</span>
+</pre></div>
+</div>
+</section>
+<section id="minimal-example">
+<h2>Minimal Example<a class="headerlink" href="#minimal-example" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfwarp</span>
+
+<span class="c1"># 1) Load and compile a MuJoCo model</span>
+<span class="n">model_path</span> <span class="o">=</span> <span class="s2">&quot;path/to/your/model.xml&quot;</span>
+<span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
+<span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
+
+<span class="c1"># 2) Move model/data into ComFree Warp</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
+    <span class="n">mjm</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+
+<span class="c1"># 3) Warm up and capture a graph for fast repeated stepping</span>
+<span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">wp</span><span class="o">.</span><span class="n">ScopedCapture</span><span class="p">()</span> <span class="k">as</span> <span class="n">capture</span><span class="p">:</span>
+    <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">capture</span><span class="o">.</span><span class="n">graph</span>
+
+<span class="c1"># 4) Run simulation steps and sync back to MuJoCo data if needed</span>
+<span class="k">for</span> <span class="n">step_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">wp</span><span class="o">.</span><span class="n">capture_launch</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="n">wp</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+    <span class="n">cfwarp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step_idx</span><span class="si">}</span><span class="s2">: qpos = </span><span class="si">{</span><span class="n">d</span><span class="o">.</span><span class="n">qpos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="core-apis">
+<h2>Core APIs<a class="headerlink" href="#core-apis" title="Link to this heading">#</a></h2>
+<section id="put-model-mjspec-comfree-stiffness-0-1-comfree-damping-0-001">
+<h3><code class="docutils literal notranslate"><span class="pre">put_model(mjspec,</span> <span class="pre">comfree_stiffness=0.1,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code><a class="headerlink" href="#put-model-mjspec-comfree-stiffness-0-1-comfree-damping-0-001" title="Link to this heading">#</a></h3>
+<p>Converts a compiled MuJoCo model into a ComFree Warp model.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mjspec</span></code>: compiled MuJoCo model specification</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code>: ComFree contact stiffness, default <code class="docutils literal notranslate"><span class="pre">0.1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>: ComFree contact damping, default <code class="docutils literal notranslate"><span class="pre">0.001</span></code></p></li>
+<li><p>any additional arguments supported by the underlying MJWarp conversion path</p></li>
+</ul>
+<p>For the detailed meaning of <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>, including per-environment parameter usage, see <a class="reference internal" href="cfwarp-params.html"><span class="std std-doc">Per-Env Parameter Parallelization</span></a>.</p>
+<p>Returns:</p>
+<ul class="simple">
+<li><p>a Warp-side model with ComFree parameters attached</p></li>
+</ul>
+</section>
+<section id="put-data-mjspec-mjdata-nworld-1-nconmax-1000-njmax-5000">
+<h3><code class="docutils literal notranslate"><span class="pre">put_data(mjspec,</span> <span class="pre">mjdata,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code><a class="headerlink" href="#put-data-mjspec-mjdata-nworld-1-nconmax-1000-njmax-5000" title="Link to this heading">#</a></h3>
+<p>Converts MuJoCo runtime data into a ComFree Warp data object.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mjspec</span></code>: MuJoCo model specification</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mjdata</span></code>: MuJoCo data object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nworld</span></code>: number of simulation worlds</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nconmax</span></code>: maximum number of contacts</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">njmax</span></code>: maximum number of constraints</p></li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><p>a Warp-side data object extended with ComFree solver fields</p></li>
+</ul>
+</section>
+<section id="make-data-mjspec-nworld-1-nconmax-1000-njmax-5000">
+<h3><code class="docutils literal notranslate"><span class="pre">make_data(mjspec,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code><a class="headerlink" href="#make-data-mjspec-nworld-1-nconmax-1000-njmax-5000" title="Link to this heading">#</a></h3>
+<p>Creates a new ComFree Warp data object without converting an existing <code class="docutils literal notranslate"><span class="pre">mjdata</span></code>.</p>
+</section>
+<section id="get-data-into-mjdata-mjspec-warp-data">
+<h3><code class="docutils literal notranslate"><span class="pre">get_data_into(mjdata,</span> <span class="pre">mjspec,</span> <span class="pre">warp_data)</span></code><a class="headerlink" href="#get-data-into-mjdata-mjspec-warp-data" title="Link to this heading">#</a></h3>
+<p>Copies Warp-side simulation state back into MuJoCo CPU arrays.</p>
+<p>Use this when you need to inspect state through MuJoCo-side tools or code.</p>
+</section>
+<section id="reset-data-mjspec-warp-data">
+<h3><code class="docutils literal notranslate"><span class="pre">reset_data(mjspec,</span> <span class="pre">warp_data)</span></code><a class="headerlink" href="#reset-data-mjspec-warp-data" title="Link to this heading">#</a></h3>
+<p>Resets the simulation state.</p>
+</section>
+<section id="step-model-data">
+<h3><code class="docutils literal notranslate"><span class="pre">step(model,</span> <span class="pre">data)</span></code><a class="headerlink" href="#step-model-data" title="Link to this heading">#</a></h3>
+<p>Runs one ComFree simulation step.</p>
+<p>This is one of the main places where <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> differs internally from <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>: the call looks the same, but it executes the ComFree solver pipeline.</p>
+</section>
+<section id="forward-model-data">
+<h3><code class="docutils literal notranslate"><span class="pre">forward(model,</span> <span class="pre">data)</span></code><a class="headerlink" href="#forward-model-data" title="Link to this heading">#</a></h3>
+<p>Runs the ComFree forward pipeline without integration.</p>
+</section>
+</section>
+<section id="batch-example">
+<h2>Batch Example<a class="headerlink" href="#batch-example" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfwarp</span>
+
+<span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;model.xml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
+<span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
+    <span class="n">mjm</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">nworlds</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">make_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="n">nworlds</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">wp</span><span class="o">.</span><span class="n">ScopedCapture</span><span class="p">()</span> <span class="k">as</span> <span class="n">capture</span><span class="p">:</span>
+    <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">capture</span><span class="o">.</span><span class="n">graph</span>
+
+<span class="k">for</span> <span class="n">step_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">):</span>
+    <span class="n">wp</span><span class="o">.</span><span class="n">capture_launch</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="n">wp</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">step_idx</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cfwarp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step_idx</span><span class="si">}</span><span class="s2">: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;min_qpos=</span><span class="si">{</span><span class="n">d</span><span class="o">.</span><span class="n">qpos</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;max_qpos=</span><span class="si">{</span><span class="n">d</span><span class="o">.</span><span class="n">qpos</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> are the main ComFree-specific additions compared with plain MJWarp.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> keep the same role as in MJWarp, but run the ComFree solver and forward pipeline internally.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_data_into()</span></code> is useful, but CPU-GPU synchronization is relatively expensive, so use it only when needed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wp.ScopedCapture()</span></code> is recommended when you plan to repeat the same simulation step many times.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./pages"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="mjwarp-usage.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">MJWarp Preliminary</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="cfwarp-params.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ComFree Contact Parameter Settings</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-example">Minimal Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-apis">Core APIs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model-mjspec-comfree-stiffness-0-1-comfree-damping-0-001"><code class="docutils literal notranslate"><span class="pre">put_model(mjspec,</span> <span class="pre">comfree_stiffness=0.1,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-mjspec-mjdata-nworld-1-nconmax-1000-njmax-5000"><code class="docutils literal notranslate"><span class="pre">put_data(mjspec,</span> <span class="pre">mjdata,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-data-mjspec-nworld-1-nconmax-1000-njmax-5000"><code class="docutils literal notranslate"><span class="pre">make_data(mjspec,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-data-into-mjdata-mjspec-warp-data"><code class="docutils literal notranslate"><span class="pre">get_data_into(mjdata,</span> <span class="pre">mjspec,</span> <span class="pre">warp_data)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data-mjspec-warp-data"><code class="docutils literal notranslate"><span class="pre">reset_data(mjspec,</span> <span class="pre">warp_data)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-model-data"><code class="docutils literal notranslate"><span class="pre">step(model,</span> <span class="pre">data)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-model-data"><code class="docutils literal notranslate"><span class="pre">forward(model,</span> <span class="pre">data)</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-example">Batch Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By ASU IRIS Lab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
