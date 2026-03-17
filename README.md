@@ -70,3 +70,20 @@ rm -rf comfree_warp_doc/_build
 - Put page content in `comfree_warp_doc/pages/`
 - Update navigation in `comfree_warp_doc/_toc.yml`
 - Update metadata and logo in `comfree_warp_doc/_config.yml`
+
+## Deploy To GitHub Pages
+
+This repository includes a GitHub Actions workflow that builds and deploys the book to GitHub Pages on pushes to `main`.
+
+Expected published URL:
+
+```text
+https://irislab.tech/comfree-doc/
+```
+
+To enable deployment in GitHub:
+
+1. Open the repository settings.
+2. Go to `Settings -> Pages`.
+3. Set `Source` to `GitHub Actions`.
+4. Push to `main` or run the workflow manually from the Actions tab.

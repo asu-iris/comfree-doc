@@ -21,7 +21,7 @@ bibtex_bibfiles:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/asu-iris/comfree-sim-doc
+  url: https://github.com/asu-iris/comfree-doc
   path_to_book: comfree_warp_doc
   branch: main
 
