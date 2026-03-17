@@ -1,5 +1,7 @@
 # How ComFree Warp Differs from MuJoCo Warp
 
+> **See also:** [ComFree Jax difference guide](comfree-jax-difference)
+>
 `comfree_warp` is designed to feel familiar to users of `mujoco_warp`. For most day-to-day usage, it should feel like the same interface, with ComFree-specific behavior added underneath.
 
 ````{important}

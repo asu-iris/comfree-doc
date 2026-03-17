@@ -1,5 +1,7 @@
 # ComFree Contact Parameter Settings
 
+> **See also:** [ComFree Jax parameter docs](comfree-jax-params)
+>
 This page explains the two main ComFree contact parameters:
 
 - `comfree_stiffness`

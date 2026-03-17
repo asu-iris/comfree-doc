@@ -1,5 +1,9 @@
 # Installation Guide
 
+> **Related:** [ComFree Jax installation](comfree-jax-installation)
+>
+> ComFree Jax (`mjx`) provides a JAX-based implementation of the ComFree solver.
+>
 This page describes how to install `comfree_warp` based on the current source tree in this repository.
 
 ## What ComFree Warp Ships

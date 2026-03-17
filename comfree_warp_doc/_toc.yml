@@ -13,3 +13,11 @@ parts:
   - file: pages/difference
   - file: pages/headless-streaming
   - file: pages/known-issues
+
+- caption: ComFree Jax
+  chapters:
+  - file: pages/comfree-jax-installation
+  - file: pages/comfree-jax-usage
+  - file: pages/comfree-jax-params
+  - file: pages/comfree-jax-difference
+  - file: pages/comfree-jax-known-issues

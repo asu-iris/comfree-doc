@@ -1,5 +1,7 @@
 # Known Issues
 
+> **See also:** [ComFree Jax known issues](comfree-jax-known-issues)
+>
 This page collects practical limitations and caveats that users should keep in mind when working with `comfree_warp`.
 
 The goal here is not to list every internal TODO in the source tree, but to document the issues that are most useful from a user perspective.

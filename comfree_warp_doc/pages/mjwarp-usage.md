@@ -1,5 +1,7 @@
 # MJWarp Preliminary
 
+> **See also:** [ComFree Jax documentation](comfree-jax-usage)
+>
 This page is a preliminary reference for the original upstream `mujoco_warp` package.
 `mujoco-warp` is a Warp-based simulator backend for MuJoCo models, designed for fast GPU-accelerated simulation while keeping a MuJoCo-like workflow (`MjModel`/`MjData` -> `put_model`/`put_data` -> `step`).
 

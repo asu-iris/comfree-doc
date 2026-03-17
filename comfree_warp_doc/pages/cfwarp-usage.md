@@ -1,5 +1,9 @@
 # ComFree Warp Usage
 
+> **See also:** [ComFree Jax documentation](comfree-jax-usage)
+>
+> ComFree Jax provides a JAX-based implementation of the same ComFree contact solver.
+
 This page shows how to use the `comfree_warp` API directly.
 
 `comfree_warp` keeps the same overall workflow as `mujoco_warp`, but replaces the core solver path with the ComFree formulation. In practice, that means you still use the familiar sequence:
