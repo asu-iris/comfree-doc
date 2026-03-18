@@ -15,42 +15,76 @@ Headless simulation allows you to run MuJoCo simulations without a local GUI vie
 To run a headless simulation, use a script like `test_headless.py`:
 
 ```python
+import os
+import time
+
 import mujoco
 import numpy as np
-from comfree_warp import cf_warp as cfwarp
+import warp as wp
+
+import comfree_warp.mujoco_warp as mjwarp
+import comfree_warp as cfwarp
 import streaming as mjstream
 
-# Load model
-model_path = "path/to/model.xml"
+# Engine selection: 0=MJC, 1=MJWARP, 2=COMFREE_WARP
+engine = 2
+
+# Model path (examples in benchmark/)
+model_path = "benchmark/test_data/primitives.xml"
+
 mjm = mujoco.MjSpec.from_file(model_path).compile()
 mjd = mujoco.MjData(mjm)
 mujoco.mj_forward(mjm, mjd)
 
-# Configure simulation parameters
-nworld = 2  # Number of parallel worlds
-njmax = 5000  # Maximum number of joints
-nconmax = 1000  # Maximum number of contacts
+# Remote streaming config (set MJSTREAM_PORT<=0 to disable)
+STREAM_HOST = os.getenv("MJSTREAM_HOST", "127.0.0.1")
+STREAM_PORT = int(os.getenv("MJSTREAM_PORT", "7000"))
+streamer = mjstream.StreamServer(model_path=model_path, host=STREAM_HOST, port=STREAM_PORT)
+if streamer.enabled:
+    streamer.start()
 
-# Initialize comfree_warp engine
-m = cfwarp.put_model(mjm, 
-    comfree_stiffness=[50.0, 50.0, 50.0, 50.0, 50.0],
-    comfree_damping=[2.0, 2.0, 2.0, 2.0, 2.0]
-)
-d = cfwarp.put_data(mjm, mjd, nworld=nworld, nconmax=nconmax, njmax=njmax)
+# Warp device config (e.g. "cpu" or "cuda:0")
+WARP_DEVICE = os.getenv("WARP_DEVICE", "cpu")
+wp.init()
+wp.set_device(WARP_DEVICE)
+
+# Configure simulation parameters
+nworld = 1
+njmax = 5000
+nconmax = 1000
+
+# Initialize comfree_warp engine (or mjwarp/MJC based on `engine`)
+if engine == 2:
+    comfree_stiffness_vec = [0.2, 0]
+    comfree_damping_vec = [0.002]
+    m = cfwarp.put_model(mjm, comfree_stiffness=comfree_stiffness_vec, comfree_damping=comfree_damping_vec)
+    d = cfwarp.put_data(mjm, mjd, nworld=nworld, nconmax=nconmax, njmax=njmax)
+    step_fn = cfwarp.step
+elif engine == 1:
+    m = mjwarp.put_model(mjm)
+    d = mjwarp.put_data(mjm, mjd, nworld=nworld, nconmax=nconmax, njmax=njmax)
+    step_fn = mjwarp.step
+else:
+    step_fn = None  # use mujoco.mj_step
 
 # Simulation loop
 for step in range(10000):
-    # Set controls
+    # Set controls / external forces
     random_ctrl = 0.0 * np.random.randn(*d.ctrl.shape)
     wp.copy(d.ctrl, wp.array(random_ctrl.astype(np.float32)))
-    
-    # Step simulation
-    cfwarp.step(m, d)
-    
-    # Get results back
-    cfwarp.get_data_into(mjd, mjm, d)
-```
 
+    # Step simulation
+    if step_fn is not None:
+        step_fn(m, d)
+        # Copy state back into the MuJoCo data structure
+        mjwarp.get_data_into(mjd, mjm, d)
+    else:
+        mujoco.mj_step(mjm, mjd)
+
+    # Stream state to connected client
+    if streamer.enabled:
+        streamer.send_state(mjd)
+```
 ### Configuration Options
 
 **Engine Selection:**
@@ -91,7 +125,7 @@ import streaming as mjstream
 
 # Configuration from environment variables
 STREAM_HOST = os.getenv("MJSTREAM_HOST", "127.0.0.1")
-STREAM_PORT = int(os.getenv("MJSTREAM_PORT", "6000"))
+STREAM_PORT = int(os.getenv("MJSTREAM_PORT", "7000"))  # set <=0 to disable streaming
 
 # Create and start streaming server
 streamer = mjstream.StreamServer(
@@ -116,18 +150,19 @@ if streamer.enabled:
 
 ### Streaming Client Setup
 
-Connect to a remote stream using the local viewer:
+To connect to a remote `StreamServer`, write a streaming client (e.g., `local_viewer.py`) that implements the following protocol:
+
+The streaming protocol works like this:
+1. Connect to the server over TCP
+2. Receive the model packet (path or XML)
+3. Receive state packets and apply them to a local `mujoco.MjData` using `streaming.apply_mjdata`
+4. Render using `mujoco.viewer.launch_passive`
+
+Example command (from the repo root):
 
 ```bash
 python local_viewer.py --host <remote_host> --port <port>
 ```
-
-The viewer will:
-1. Connect to the streaming server
-2. Receive the model definition (XML or model path)
-3. Display each received state frame in real-time
-4. Automatically reconnect on connection loss
-
 
 ### Using SSH Tunneling for Remote Access
 
@@ -137,20 +172,22 @@ To view a simulation on a remote server, use SSH port forwarding:
 # On your local machine, create a tunnel to the remote server
 ssh -L 6000:127.0.0.1:6000 user@remote-server
 
-# In another terminal, run the local viewer
+# In another terminal, run the streaming client (e.g. `local_viewer.py`)
 python local_viewer.py --host 127.0.0.1 --port 6000
 ```
 
 This forwards local port 6000 to the remote server's port 6000, allowing secure access to the streaming server.
 
-### Streaming Client Options
+### Example Client Options
+
+A streaming client can expose command-line flags similar to the following:
 
 ```
 usage: local_viewer.py [-h] [--host HOST] [--port PORT] [--retry-delay DELAY]
 
 options:
   --host HOST              Remote host (pair with ssh -L, default: 127.0.0.1)
-  --port PORT              TCP port exposed by the remote streamer (default: 6001)
+  --port PORT              TCP port exposed by the remote streamer (default: 7000)
   --retry-delay DELAY      Seconds to wait before retrying after disconnect (default: 2.0)
 ```
 
@@ -159,9 +196,9 @@ options:
 python local_viewer.py --host remote.server.com --port 6000 --retry-delay 5.0
 ```
 
-### Local Viewer Implementation
+### Example Streaming Client Implementation
 
-The `local_viewer.py` is a **client-side** viewer that connects to the streaming server and displays simulation states in real-time. It uses utilities from `streaming.py`.
+Below is an example of what a streaming client could look like. This is not shipped as a ready-made script, but it demonstrates how to use the helpers in `streaming.py` to receive model/state packets and render them in a local MuJoCo viewer.
 
 #### Key Components from streaming.py (Client Side)
 
@@ -186,7 +223,7 @@ def apply_mjdata(mjd: mujoco.MjData, state) -> None:
         np.copyto(mjd.ctrl, state["ctrl"])
 ```
 
-#### Client Machine: local_viewer.py
+#### Example client (local machine)
 
 The viewer runs on the **client machine** with the display. It:
 1. Connects to the server via TCP socket
@@ -278,7 +315,8 @@ def pack_mjdata(mjd: mujoco.MjData):
     }
 
 # In your headless simulation loop
-streamer = mjstream.StreamServer(model_path=model_path, host="0.0.0.0", port=6000)
+# (In `test_headless.py`, the port is controlled by MJSTREAM_PORT and defaults to 7000)
+streamer = mjstream.StreamServer(model_path=model_path, host="0.0.0.0", port=7000)
 streamer.start()  # Wait for client connection
 
 for step in range(num_steps):
@@ -292,11 +330,11 @@ for step in range(num_steps):
 
 **Key Distinction:**
 - **Server Machine**: Runs `test_headless.py` - executes the simulation, sends state packets
-- **Client Machine**: Runs `local_viewer.py` - receives packets, renders in MuJoCo viewer
+- **Client Machine**: Runs a streaming client (see examples above) to receive packets and render in MuJoCo viewer
 
 ### Alternative: test_viewer.py (Local Viewer)
 
-The `test_viewer.py` script is a **standalone local viewer** that runs on a single machine with the simulation. Unlike `local_viewer.py`, it does not connect to a remote streaming server. Instead, it:
+The `test_viewer.py` script is a **standalone local viewer** that runs on a single machine with the simulation. Unlike a dedicated streaming client, it does not connect to a remote streaming server. Instead, it:
 - Loads a model locally
 - Runs a simulation using the same engines (MJC, MJWARP, or COMFREE_WARP)
 - Displays the simulation in real-time using MuJoCo's passive viewer
@@ -314,7 +352,7 @@ export MJSTREAM_PORT=6000
 python test_headless.py
 ```
 
-**Terminal 2 - View the stream locally:**
+**Terminal 2 - View the stream locally (using a client):**
 ```bash
 python local_viewer.py --host 127.0.0.1 --port 6000
 ```
@@ -324,7 +362,7 @@ python local_viewer.py --host 127.0.0.1 --port 6000
 **Terminal 1 - SSH to remote server and run simulation:**
 ```bash
 ssh user@remote-server
-cd /path/to/comfree_dex
+cd /path/to/repo
 export MJSTREAM_PORT=6000
 python test_headless.py
 ```
