@@ -276,7 +276,7 @@ def _stream_once(sock):
 def main():
     parser = argparse.ArgumentParser(description="Connect to streaming server and view simulation")
     parser.add_argument("--host", default="127.0.0.1", help="Server host")
-    parser.add_argument("--port", type=int, default=6001, help="Server port")
+    parser.add_argument("--port", type=int, default=7000, help="Server port")
     parser.add_argument("--retry-delay", type=float, default=2.0, help="Retry delay on disconnect")
     args = parser.parse_args()
 
