@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -179,13 +179,23 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">MJWarp Preliminary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using ComFree Warp</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cfwarp-usage.html">ComFree Warp Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameter Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameters</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="headless-streaming.html">Headless Simulation and Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="known-issues.html">Known Issues</a></li>
 </ul>
 
@@ -384,6 +394,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-example">Minimal Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-example-shows">What This Example Shows</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
 </ul>
             </nav>
@@ -398,10 +409,12 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="mjwarp-preliminary">
 <h1>MJWarp Preliminary<a class="headerlink" href="#mjwarp-preliminary" title="Link to this heading">#</a></h1>
-<p>This page is a preliminary reference for the original upstream <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> package.
-<code class="docutils literal notranslate"><span class="pre">mujoco-warp</span></code> is a Warp-based simulator backend for MuJoCo models, designed for fast GPU-accelerated simulation while keeping a MuJoCo-like workflow (<code class="docutils literal notranslate"><span class="pre">MjModel</span></code>/<code class="docutils literal notranslate"><span class="pre">MjData</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">put_model</span></code>/<code class="docutils literal notranslate"><span class="pre">put_data</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">step</span></code>).</p>
-<p>We include this MJWarp introduction because <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> intentionally follows almost the same interface and workflow. Understanding the basic <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> usage pattern makes it much easier to understand <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code>, since the same core calls such as <code class="docutils literal notranslate"><span class="pre">put_model</span></code>, <code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">forward</span></code>, <code class="docutils literal notranslate"><span class="pre">reset_data</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code> carry over directly.</p>
-<p>For full upstream documentation, see the <a class="reference external" href="https://mujoco.readthedocs.io/en/latest/mjwarp/">mujoco-warp docs</a>.</p>
+<p>This page introduces the upstream <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> package only as background. It is included to explain the workflow and API pattern that <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> largely preserves, not because <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> is the primary target of this documentation.</p>
+<p>If you are here to use ComFree directly, you can treat this page as a short compatibility primer and then move on to <a class="reference internal" href="cfwarp-usage.html"><span class="std std-doc">ComFree Warp Usage</span></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> is a Warp-based simulation backend for MuJoCo models. In broad terms, the workflow is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">MjModel</span></code> / <code class="docutils literal notranslate"><span class="pre">MjData</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">put_model</span></code> / <code class="docutils literal notranslate"><span class="pre">put_data</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">step</span></code> / <code class="docutils literal notranslate"><span class="pre">forward</span></code></p>
+<p>We include this MJWarp introduction because <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> intentionally stays close to the same interface and execution pattern. Understanding the basic <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> usage pattern makes it much easier to understand <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code>, since the same core entry points such as <code class="docutils literal notranslate"><span class="pre">put_model</span></code>, <code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">forward</span></code>, <code class="docutils literal notranslate"><span class="pre">reset_data</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code> carry over directly.</p>
+<p>For full upstream documentation, see the <a class="reference external" href="https://mujoco.readthedocs.io/en/latest/mjwarp/">mujoco_warp docs</a>.</p>
 <section id="imports">
 <h2>Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
@@ -412,24 +425,24 @@ document.write(`
 </section>
 <section id="minimal-example">
 <h2>Minimal Example<a class="headerlink" href="#minimal-example" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1) Load and compile a MuJoCo model</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1) Load and compile a MuJoCo model, then allocate runtime state</span>
 <span class="n">model_path</span> <span class="o">=</span> <span class="s2">&quot;benchmark/test_data/primitives.xml&quot;</span>
 <span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 <span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
 <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
 
-<span class="c1"># 2) Move model/data into mujoco-warp</span>
+<span class="c1"># 2) Convert the model and data into Warp-side structures</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">mjwarp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">mjwarp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
 
-<span class="c1"># 3) Warm up and capture a graph for fast repeated stepping</span>
+<span class="c1"># 3) Warm up once, then capture a Warp graph for repeated execution</span>
 <span class="n">mjwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">mjwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">wp</span><span class="o">.</span><span class="n">ScopedCapture</span><span class="p">()</span> <span class="k">as</span> <span class="n">capture</span><span class="p">:</span>
     <span class="n">mjwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">capture</span><span class="o">.</span><span class="n">graph</span>
 
-<span class="c1"># 4) Run steps and sync back to MuJoCo data if needed</span>
+<span class="c1"># 4) Launch the captured graph and copy results back when needed</span>
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
     <span class="n">wp</span><span class="o">.</span><span class="n">capture_launch</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
     <span class="n">wp</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
@@ -437,38 +450,28 @@ document.write(`
 </pre></div>
 </div>
 </section>
+<section id="what-this-example-shows">
+<h2>What This Example Shows<a class="headerlink" href="#what-this-example-shows" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mujoco.MjSpec.from_file(...).compile()</span></code> produces a compiled <code class="docutils literal notranslate"><span class="pre">MjModel</span></code>, stored here in <code class="docutils literal notranslate"><span class="pre">mjm</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mujoco.MjData(mjm)</span></code> allocates the corresponding runtime <code class="docutils literal notranslate"><span class="pre">MjData</span></code> structure on the host.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mjwarp.put_model(mjm)</span></code> places the host-side <code class="docutils literal notranslate"><span class="pre">MjModel</span></code> onto device and returns an <code class="docutils literal notranslate"><span class="pre">mjwarp.Model</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mjwarp.put_data(mjm,</span> <span class="pre">mjd,</span> <span class="pre">...)</span></code> places the host-side <code class="docutils literal notranslate"><span class="pre">MjData</span></code> onto device and returns an <code class="docutils literal notranslate"><span class="pre">mjwarp.Data</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mjwarp.Model</span></code> and <code class="docutils literal notranslate"><span class="pre">mjwarp.Data</span></code> mirror their MuJoCo counterparts conceptually, but store Warp arrays on device and may omit fields associated with unsupported features.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mjwarp.step(m,</span> <span class="pre">d)</span></code> advances the device-side simulation state by executing the MJWarp simulation pipeline.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mjwarp.get_data_into(mjd,</span> <span class="pre">mjm,</span> <span class="pre">d)</span></code> copies one world from device back into an existing host-side <code class="docutils literal notranslate"><span class="pre">MjData</span></code> when MuJoCo-side access is needed.</p></li>
+</ul>
+</section>
 <section id="notes">
 <h2>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">put_model</span></code> and <code class="docutils literal notranslate"><span class="pre">put_data</span></code> convert MuJoCo structures into Warp-compatible structures.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">nconmax</span></code> and <code class="docutils literal notranslate"><span class="pre">njmax</span></code> control contact/constraint buffer sizes for Warp simulation.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mjwarp.get_data_into(...)</span></code> is useful when external tools read from <code class="docutils literal notranslate"><span class="pre">mjd</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nworld</span></code> specifies how many parallel simulation worlds are allocated in the Warp-side data object.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nconmax</span></code> is the expected number of contacts per world. The total number of contacts across all worlds can exceed <code class="docutils literal notranslate"><span class="pre">nconmax</span></code> for an individual world as long as the overall batch allocation is not exceeded.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">njmax</span></code> is the maximum number of constraints per world, and this limit is enforced per world.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mujoco.mj_forward(mjm,</span> <span class="pre">mjd)</span></code> is used here to start from a consistent host-side state before transferring data to device.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code> is only needed when downstream code, logging, or visualization must read host-side MuJoCo state.</p></li>
 </ul>
-<!-- ## comfree-sim Extends mujoco-warp
-
-`comfree_warp` builds directly on `mujoco_warp` and re-exports its ComFree API at the top level, so the workflow above carries over with only an import change. The table below shows how each function relates to its `mujoco_warp` counterpart:
-
-
-| Function        | Relationship | Notes                                                                                            |
-| --------------- | ------------ | ------------------------------------------------------------------------------------------------ |
-| `put_model`     | Extended     | Calls`mjwarp.put_model`, then attaches `comfree_stiffness`/`comfree_damping` arrays to the model |
-| `put_data`      | Extended     | Calls`mjwarp.put_data`, then adds comfree constraint and velocity fields to the data             |
-| `make_data`     | Extended     | Same extension pattern as`put_data`                                                              |
-| `get_data_into` | Extended     | Same extension pattern as`put_data`                                                              |
-| `reset_data`    | Delegated    | Passes through directly to`mjwarp.reset_data`                                                    |
-| `step`          | Replaced     | Uses comfree's own physics pipeline instead of mjwarp's                                          |
-| `forward`       | Replaced     | Uses comfree's own forward pass instead of mjwarp's                                              |
-
-To migrate from `mujoco_warp` to `comfree_warp`, only the import line changes:
-
-```python
-# Before
-import mujoco_warp as mjwarp
-
-# After
-import comfree_warp
-``` -->
-<p>All <code class="docutils literal notranslate"><span class="pre">put_model</span></code>, <code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code>, and <code class="docutils literal notranslate"><span class="pre">reset_data</span></code> calls are signature-compatible — no other changes are required for basic usage.</p>
+<p>For basic usage, <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> keeps the same overall call structure as <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, which is why understanding this page is useful before moving on to the ComFree-specific API extensions.</p>
 </section>
 </section>
 
@@ -538,6 +541,7 @@ import comfree_warp
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-example">Minimal Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-example-shows">What This Example Shows</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
 </ul>
   </nav></div>
@@ -560,13 +564,6 @@ By ASU IRIS Lab
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

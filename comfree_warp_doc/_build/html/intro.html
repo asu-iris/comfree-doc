@@ -180,13 +180,23 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pages/installation.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/mjwarp-usage.html">MJWarp Preliminary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using ComFree Warp</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pages/cfwarp-usage.html">ComFree Warp Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/cfwarp-params.html">ComFree Contact Parameter Settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/cfwarp-params.html">ComFree Contact Parameters</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pages/difference.html">How ComFree Warp Differs from MJWarp</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pages/headless-streaming.html">Headless Simulation and Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/known-issues.html">Known Issues</a></li>
 </ul>
 
@@ -383,7 +393,15 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-warp">ComFree Warp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-comfree-warp">Why ComFree Warp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tradeoffs-and-recommendation">Tradeoffs and Recommendation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#potential-applications">Potential Applications</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-pipeline">Simulation Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation-guide">Documentation Guide</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -397,18 +415,67 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="comfree-sim">
 <h1>ComFree Sim<a class="headerlink" href="#comfree-sim" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">comfree-sim</span></code> is a GPU-parallelized analytical contact physics engine designed for scalable contact-rich robotics simulation and control. It replaces iterative complementarity-based contact resolution with a complementarity-free analytical formulation that computes contact impulses in closed form, enabling near-linear scaling with contact count in dense-contact scenes.</p>
-<p>Built in Warp and exposed through a MuJoCo-compatible interface, <code class="docutils literal notranslate"><span class="pre">comfree-sim</span></code> can be used as a drop-in backend alternative to MJWarp. It supports unified 6D contact modeling, including tangential, torsional, and rolling friction, and is aimed at applications such as large-scale simulation, real-time model predictive control, and dexterous manipulation.</p>
-<section id="comfree-warp">
-<h2>ComFree Warp<a class="headerlink" href="#comfree-warp" title="Link to this heading">#</a></h2>
+<a class="reference internal image-reference" href="_images/teaser.jpg"><img alt="ComFree Warp teaser" class="align-center" src="_images/teaser.jpg" style="width: 100%;" />
+</a>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>ComFree-Sim is a GPU-parallel analytical contact physics engine for scalable contact-rich robotics simulation and control. It replaces iterative complementarity-based contact resolution with a complementarity-free analytical formulation that computes contact impulses in closed form, enabling near-linear scaling with contact count in dense-contact scenes.</p>
+</section>
+<section id="why-comfree-warp">
+<h2>Why ComFree Warp<a class="headerlink" href="#why-comfree-warp" title="Link to this heading">#</a></h2>
+<p>Built in Warp and exposed through a MuJoCo-compatible interface, <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> can be used as a drop-in backend alternative to MuJoCo Warp (MJWarp). It inherits most of the features provided by MJWarp, while replacing the contact dynamics resolution stage with a complementarity-free contact formulation. This flattened contact-resolution pipeline delivers more than 2x higher throughput than MJWarp while maintaining comparable and tunable physical fidelity.</p>
+</section>
+<section id="tradeoffs-and-recommendation">
+<h2>Tradeoffs and Recommendation<a class="headerlink" href="#tradeoffs-and-recommendation" title="Link to this heading">#</a></h2>
+<p>While <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. If simulation speed is not a primary concern, we recommend continuing to use MuJoCo (Warp).</p>
+<p>At the same time, ComFree is an evolving open project, and we warmly welcome contributions from the community to improve robustness, expand features, and broaden application support.</p>
+</section>
+<section id="potential-applications">
+<h2>Potential Applications<a class="headerlink" href="#potential-applications" title="Link to this heading">#</a></h2>
+<p>This makes <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> well suited for workloads where both speed and customizable contact matter, including:</p>
+<ul class="simple">
+<li><p>scalable contact-dense simulation</p></li>
+<li><p>low-latency (simulation) predictive control for contact-rich robotics</p></li>
+<li><p>differnetiable contact dynamics learning (real-to-sim)</p></li>
+<li><p>real-time predictive control for dexterous manipulation (graident-based, coming soon)</p></li>
+</ul>
+</section>
+<section id="simulation-pipeline">
+<h2>Simulation Pipeline<a class="headerlink" href="#simulation-pipeline" title="Link to this heading">#</a></h2>
+<p>The flowchart below summarizes the main computation path and highlights how the analytical contact model fits into the overall simulation pipeline.</p>
+<a class="reference internal image-reference" href="_images/comfree_flowchart_5.jpg"><img alt="ComFree workflow chart" class="align-center" src="_images/comfree_flowchart_5.jpg" style="width: 80%;" />
+</a>
+</section>
+<section id="acknowledgments">
+<h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Link to this heading">#</a></h2>
+<p>We acknowledge the MuJoCo team and the Newton team for open-sourcing the MuJoCo simulator and the Warp language. Their tools and engineering work made the development of <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> possible.</p>
+</section>
+<section id="documentation-guide">
+<h2>Documentation Guide<a class="headerlink" href="#documentation-guide" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pages/installation.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/mjwarp-usage.html">MJWarp Preliminary</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using ComFree Warp</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="pages/cfwarp-usage.html">ComFree Warp Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/cfwarp-params.html">ComFree Contact Parameter Settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/cfwarp-params.html">ComFree Contact Parameters</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pages/difference.html">How ComFree Warp Differs from MJWarp</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pages/headless-streaming.html">Headless Simulation and Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/known-issues.html">Known Issues</a></li>
 </ul>
 </div>
@@ -470,7 +537,15 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-warp">ComFree Warp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-comfree-warp">Why ComFree Warp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tradeoffs-and-recommendation">Tradeoffs and Recommendation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#potential-applications">Potential Applications</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-pipeline">Simulation Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation-guide">Documentation Guide</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
 </ul>
   </nav></div>
 
@@ -492,13 +567,6 @@ By ASU IRIS Lab
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

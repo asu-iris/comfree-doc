@@ -1,0 +1,993 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Headless Simulation and Streaming &#8212; ComFree Warp Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/headless-streaming';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Known Issues" href="known-issues.html" />
+    <link rel="prev" title="How ComFree Warp Differs from MuJoCo Warp" href="difference.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/comfree_logo.png" class="logo__image only-light" alt="ComFree Warp Documentation - Home"/>
+    <script>document.write(`<img src="../_static/comfree_logo.png" class="logo__image only-dark" alt="ComFree Warp Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    ComFree Sim
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mjwarp-usage.html">MJWarp Preliminary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using ComFree Warp</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-usage.html">ComFree Warp Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameters</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Headless Simulation and Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="known-issues.html">Known Issues</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/asu-iris/comfree-doc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/asu-iris/comfree-doc/issues/new?title=Issue%20on%20page%20%2Fpages/headless-streaming.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/pages/headless-streaming.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Headless Simulation and Streaming</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#headless-simulation">Headless Simulation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-headless-simulations">Running Headless Simulations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-options">Configuration Options</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-streaming">Simulation Streaming</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-server-setup">Streaming Server Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-client-setup">Streaming Client Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-ssh-tunneling-for-remote-access">Using SSH Tunneling for Remote Access</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-client-options">Example Client Options</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-streaming-client-implementation">Example Streaming Client Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components-from-streaming-py-client-side">Key Components from streaming.py (Client Side)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-client-local-machine">Example client (local machine)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#server-machine-test-headless-py-usage">Server Machine: test_headless.py Usage</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-test-viewer-py-local-viewer">Alternative: test_viewer.py (Local Viewer)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-local-headless-simulation-with-streaming">Example 1: Local Headless Simulation with Streaming</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-remote-simulation-with-ssh-tunnel">Example 2: Remote Simulation with SSH Tunnel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-benchmark-multiple-models">Example 3: Benchmark Multiple Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="headless-simulation-and-streaming">
+<h1>Headless Simulation and Streaming<a class="headerlink" href="#headless-simulation-and-streaming" title="Link to this heading">#</a></h1>
+<p>This page describes how to run headless simulations and stream simulation states to remote viewers.</p>
+<section id="headless-simulation">
+<h2>Headless Simulation<a class="headerlink" href="#headless-simulation" title="Link to this heading">#</a></h2>
+<p>Headless simulation allows you to run MuJoCo simulations without a local GUI viewer, which is useful for:</p>
+<ul class="simple">
+<li><p>Running simulations on remote servers or compute clusters</p></li>
+<li><p>Batch processing and benchmarking</p></li>
+<li><p>High-performance simulation loops</p></li>
+<li><p>Headless or server environments without display support</p></li>
+</ul>
+<section id="running-headless-simulations">
+<h3>Running Headless Simulations<a class="headerlink" href="#running-headless-simulations" title="Link to this heading">#</a></h3>
+<p>To run a headless simulation, use a script like <code class="docutils literal notranslate"><span class="pre">test_headless.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp.mujoco_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mjwarp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfwarp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streaming</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mjstream</span>
+
+<span class="c1"># Engine selection: 0=MJC, 1=MJWARP, 2=COMFREE_WARP</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1"># Model path (examples in benchmark/)</span>
+<span class="n">model_path</span> <span class="o">=</span> <span class="s2">&quot;benchmark/test_data/primitives.xml&quot;</span>
+
+<span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
+<span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
+
+<span class="c1"># Remote streaming config (set MJSTREAM_PORT&lt;=0 to disable)</span>
+<span class="n">STREAM_HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MJSTREAM_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">)</span>
+<span class="n">STREAM_PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MJSTREAM_PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;7000&quot;</span><span class="p">))</span>
+<span class="n">streamer</span> <span class="o">=</span> <span class="n">mjstream</span><span class="o">.</span><span class="n">StreamServer</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">STREAM_HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">STREAM_PORT</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">streamer</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+    <span class="n">streamer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># Warp device config (e.g. &quot;cpu&quot; or &quot;cuda:0&quot;)</span>
+<span class="n">WARP_DEVICE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;WARP_DEVICE&quot;</span><span class="p">,</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">wp</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">wp</span><span class="o">.</span><span class="n">set_device</span><span class="p">(</span><span class="n">WARP_DEVICE</span><span class="p">)</span>
+
+<span class="c1"># Configure simulation parameters</span>
+<span class="n">nworld</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">njmax</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">nconmax</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="c1"># Initialize comfree_warp engine (or mjwarp/MJC based on `engine`)</span>
+<span class="k">if</span> <span class="n">engine</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">comfree_stiffness_vec</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">comfree_damping_vec</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.002</span><span class="p">]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">comfree_stiffness</span><span class="o">=</span><span class="n">comfree_stiffness_vec</span><span class="p">,</span> <span class="n">comfree_damping</span><span class="o">=</span><span class="n">comfree_damping_vec</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="n">nworld</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="n">nconmax</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="n">njmax</span><span class="p">)</span>
+    <span class="n">step_fn</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span>
+<span class="k">elif</span> <span class="n">engine</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">mjwarp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">mjwarp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="n">nworld</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="n">nconmax</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="n">njmax</span><span class="p">)</span>
+    <span class="n">step_fn</span> <span class="o">=</span> <span class="n">mjwarp</span><span class="o">.</span><span class="n">step</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">step_fn</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># use mujoco.mj_step</span>
+
+<span class="c1"># Simulation loop</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="c1"># Set controls / external forces</span>
+    <span class="n">random_ctrl</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">d</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">wp</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">wp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">random_ctrl</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)))</span>
+
+    <span class="c1"># Step simulation</span>
+    <span class="k">if</span> <span class="n">step_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">step_fn</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="c1"># Copy state back into the MuJoCo data structure</span>
+        <span class="n">mjwarp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_step</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
+
+    <span class="c1"># Stream state to connected client</span>
+    <span class="k">if</span> <span class="n">streamer</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+        <span class="n">streamer</span><span class="o">.</span><span class="n">send_state</span><span class="p">(</span><span class="n">mjd</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="configuration-options">
+<h3>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">#</a></h3>
+<p><strong>Engine Selection:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> - MJC (standard MuJoCo CPU engine)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> - MJWARP (MuJoCo compiled to Warp)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code> - COMFREE_WARP (Contact-Free Warp engine)</p></li>
+</ul>
+<p><strong>Simulation Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nworld</span></code> - Number of parallel simulation worlds</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">njmax</span></code> - Maximum number of joints per model</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nconmax</span></code> - Maximum number of simultaneous contacts</p></li>
+</ul>
+<p><strong>Contact-Free Engine Parameters (COMFREE_WARP):</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> - List of stiffness values for contact dynamics</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> - List of damping values for contact dynamics</p></li>
+</ul>
+</section>
+</section>
+<section id="simulation-streaming">
+<h2>Simulation Streaming<a class="headerlink" href="#simulation-streaming" title="Link to this heading">#</a></h2>
+<p>Streaming allows you to:</p>
+<ul class="simple">
+<li><p>Visualize remote simulations locally</p></li>
+<li><p>Monitor long-running simulations on distant servers</p></li>
+<li><p>Reduce computational overhead on the server (no local rendering)</p></li>
+<li><p>Separate simulation compute from visualization</p></li>
+</ul>
+<section id="architecture">
+<h3>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h3>
+<p>The streaming system uses a <strong>server-client</strong> architecture:</p>
+<ul class="simple">
+<li><p><strong>Server</strong>: Runs the headless simulation and streams state updates via TCP</p></li>
+<li><p><strong>Client</strong>: Connects to the server and renders the received state in a local viewer</p></li>
+</ul>
+</section>
+<section id="streaming-server-setup">
+<h3>Streaming Server Setup<a class="headerlink" href="#streaming-server-setup" title="Link to this heading">#</a></h3>
+<p>Enable streaming in your headless simulation script by configuring the <code class="docutils literal notranslate"><span class="pre">StreamServer</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streaming</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mjstream</span>
+
+<span class="c1"># Configuration from environment variables</span>
+<span class="n">STREAM_HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MJSTREAM_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">)</span>
+<span class="n">STREAM_PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MJSTREAM_PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;7000&quot;</span><span class="p">))</span>  <span class="c1"># set &lt;=0 to disable streaming</span>
+
+<span class="c1"># Create and start streaming server</span>
+<span class="n">streamer</span> <span class="o">=</span> <span class="n">mjstream</span><span class="o">.</span><span class="n">StreamServer</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="n">STREAM_HOST</span><span class="p">,</span>
+    <span class="n">port</span><span class="o">=</span><span class="n">STREAM_PORT</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">streamer</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+    <span class="n">streamer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># In your simulation loop, send state after each step</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+    <span class="c1"># ... run simulation step ...</span>
+    <span class="k">if</span> <span class="n">streamer</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+        <span class="n">streamer</span><span class="o">.</span><span class="n">send_state</span><span class="p">(</span><span class="n">mjd</span><span class="p">)</span>
+
+<span class="c1"># Clean up</span>
+<span class="k">if</span> <span class="n">streamer</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+    <span class="n">streamer</span><span class="o">.</span><span class="n">stop_connection</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="streaming-client-setup">
+<h3>Streaming Client Setup<a class="headerlink" href="#streaming-client-setup" title="Link to this heading">#</a></h3>
+<p>To connect to a remote <code class="docutils literal notranslate"><span class="pre">StreamServer</span></code>, write a streaming client (e.g., <code class="docutils literal notranslate"><span class="pre">local_viewer.py</span></code>) that implements the following protocol:</p>
+<p>The streaming protocol works like this:</p>
+<ol class="arabic simple">
+<li><p>Connect to the server over TCP</p></li>
+<li><p>Receive the model packet (path or XML)</p></li>
+<li><p>Receive state packets and apply them to a local <code class="docutils literal notranslate"><span class="pre">mujoco.MjData</span></code> using <code class="docutils literal notranslate"><span class="pre">streaming.apply_mjdata</span></code></p></li>
+<li><p>Render using <code class="docutils literal notranslate"><span class="pre">mujoco.viewer.launch_passive</span></code></p></li>
+</ol>
+<p>Example command (from the repo root):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>local_viewer.py<span class="w"> </span>--host<span class="w"> </span>&lt;remote_host&gt;<span class="w"> </span>--port<span class="w"> </span>&lt;port&gt;
+</pre></div>
+</div>
+</section>
+<section id="using-ssh-tunneling-for-remote-access">
+<h3>Using SSH Tunneling for Remote Access<a class="headerlink" href="#using-ssh-tunneling-for-remote-access" title="Link to this heading">#</a></h3>
+<p>To view a simulation on a remote server, use SSH port forwarding:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On your local machine, create a tunnel to the remote server</span>
+ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">6000</span>:127.0.0.1:6000<span class="w"> </span>user@remote-server
+
+<span class="c1"># In another terminal, run the streaming client (e.g. `local_viewer.py`)</span>
+python<span class="w"> </span>local_viewer.py<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">6000</span>
+</pre></div>
+</div>
+<p>This forwards local port 6000 to the remote server’s port 6000, allowing secure access to the streaming server.</p>
+</section>
+<section id="example-client-options">
+<h3>Example Client Options<a class="headerlink" href="#example-client-options" title="Link to this heading">#</a></h3>
+<p>A streaming client can expose command-line flags similar to the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">local_viewer</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">host</span> <span class="n">HOST</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">port</span> <span class="n">PORT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">retry</span><span class="o">-</span><span class="n">delay</span> <span class="n">DELAY</span><span class="p">]</span>
+
+<span class="n">options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">host</span> <span class="n">HOST</span>              <span class="n">Remote</span> <span class="n">host</span> <span class="p">(</span><span class="n">pair</span> <span class="k">with</span> <span class="n">ssh</span> <span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="mf">127.0.0.1</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">port</span> <span class="n">PORT</span>              <span class="n">TCP</span> <span class="n">port</span> <span class="n">exposed</span> <span class="n">by</span> <span class="n">the</span> <span class="n">remote</span> <span class="n">streamer</span> <span class="p">(</span><span class="n">default</span><span class="p">:</span> <span class="mi">7000</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">retry</span><span class="o">-</span><span class="n">delay</span> <span class="n">DELAY</span>      <span class="n">Seconds</span> <span class="n">to</span> <span class="n">wait</span> <span class="n">before</span> <span class="n">retrying</span> <span class="n">after</span> <span class="n">disconnect</span> <span class="p">(</span><span class="n">default</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Example with custom port and retry delay:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>local_viewer.py<span class="w"> </span>--host<span class="w"> </span>remote.server.com<span class="w"> </span>--port<span class="w"> </span><span class="m">6000</span><span class="w"> </span>--retry-delay<span class="w"> </span><span class="m">5</span>.0
+</pre></div>
+</div>
+</section>
+<section id="example-streaming-client-implementation">
+<h3>Example Streaming Client Implementation<a class="headerlink" href="#example-streaming-client-implementation" title="Link to this heading">#</a></h3>
+<p>Below is an example of what a streaming client could look like. This is not shipped as a ready-made script, but it demonstrates how to use the helpers in <code class="docutils literal notranslate"><span class="pre">streaming.py</span></code> to receive model/state packets and render them in a local MuJoCo viewer.</p>
+<section id="key-components-from-streaming-py-client-side">
+<h4>Key Components from <a class="reference external" href="http://streaming.py">streaming.py</a> (Client Side)<a class="headerlink" href="#key-components-from-streaming-py-client-side" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">recv_packet</span><span class="p">(</span><span class="n">sock</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Receive a packet from the streaming server.&quot;&quot;&quot;</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">_recvall</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">_HEADER</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">length</span><span class="p">,)</span> <span class="o">=</span> <span class="n">_HEADER</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">_recvall</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_mjdata</span><span class="p">(</span><span class="n">mjd</span><span class="p">:</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply received state to MuJoCo data structure.&quot;&quot;&quot;</span>
+    <span class="n">mjd</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">mjd</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;qpos&quot;</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">qpos</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;qpos&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">&quot;qvel&quot;</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">qvel</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;qvel&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">&quot;act&quot;</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">act</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;act&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">&quot;ctrl&quot;</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;ctrl&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="example-client-local-machine">
+<h4>Example client (local machine)<a class="headerlink" href="#example-client-local-machine" title="Link to this heading">#</a></h4>
+<p>The viewer runs on the <strong>client machine</strong> with the display. It:</p>
+<ol class="arabic simple">
+<li><p>Connects to the server via TCP socket</p></li>
+<li><p>Receives the model (path or XML)</p></li>
+<li><p>Receives state updates and applies them to MuJoCo</p></li>
+<li><p>Renders each state in the MuJoCo viewer</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">socket</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mujoco.viewer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streaming</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mjstream</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_stream_once</span><span class="p">(</span><span class="n">sock</span><span class="p">):</span>
+    <span class="c1"># Receive model information from server</span>
+    <span class="n">first_packet</span> <span class="o">=</span> <span class="n">mjstream</span><span class="o">.</span><span class="n">recv_packet</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="n">first_packet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;model_path&quot;</span><span class="p">:</span>
+        <span class="n">model_path</span> <span class="o">=</span> <span class="n">first_packet</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading model from path: </span><span class="si">{</span><span class="n">model_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading model from XML blob&quot;</span><span class="p">)</span>
+        <span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">first_packet</span><span class="p">[</span><span class="s2">&quot;xml&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+    
+    <span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
+    <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
+
+    <span class="c1"># Launch viewer</span>
+    <span class="n">viewer</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">launch_passive</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">viewer</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">packet</span> <span class="o">=</span> <span class="n">mjstream</span><span class="o">.</span><span class="n">recv_packet</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connection lost: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+            
+            <span class="n">kind</span> <span class="o">=</span> <span class="n">packet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;close&quot;</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">!=</span> <span class="s2">&quot;state&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="c1"># Apply received state to local MuJoCo data</span>
+            <span class="n">mjstream</span><span class="o">.</span><span class="n">apply_mjdata</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">packet</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">])</span>
+            <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
+            <span class="n">viewer</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span>  <span class="c1"># Update display</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Connect to streaming server and view simulation&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--host&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Server host&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">7000</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Server port&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--retry-delay&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Retry delay on disconnect&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecting to </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">socket</span><span class="o">.</span><span class="n">create_connection</span><span class="p">((</span><span class="n">args</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">))</span> <span class="k">as</span> <span class="n">sock</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connected. Rendering stream...&quot;</span><span class="p">)</span>
+                <span class="n">_stream_once</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Stopped.&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connection failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrying in </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">retry_delay</span><span class="si">}</span><span class="s2">s...&quot;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">retry_delay</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="server-machine-test-headless-py-usage">
+<h4>Server Machine: test_headless.py Usage<a class="headerlink" href="#server-machine-test-headless-py-usage" title="Link to this heading">#</a></h4>
+<p>The server runs on the <strong>server machine</strong> (usually compute cluster):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streaming</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mjstream</span>
+
+<span class="c1"># Server side: pack and send state</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pack_mjdata</span><span class="p">(</span><span class="n">mjd</span><span class="p">:</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Package MuJoCo data for transmission to client.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
+        <span class="s2">&quot;qpos&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">qpos</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="s2">&quot;qvel&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">qvel</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="s2">&quot;act&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">act</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="s2">&quot;ctrl&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="s2">&quot;xfrc_applied&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mjd</span><span class="o">.</span><span class="n">xfrc_applied</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="p">}</span>
+
+<span class="c1"># In your headless simulation loop</span>
+<span class="c1"># (In `test_headless.py`, the port is controlled by MJSTREAM_PORT and defaults to 7000)</span>
+<span class="n">streamer</span> <span class="o">=</span> <span class="n">mjstream</span><span class="o">.</span><span class="n">StreamServer</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">7000</span><span class="p">)</span>
+<span class="n">streamer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>  <span class="c1"># Wait for client connection</span>
+
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+    <span class="c1"># Run simulation...</span>
+    <span class="n">mjwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    
+    <span class="c1"># Send state to connected client</span>
+    <span class="k">if</span> <span class="n">streamer</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+        <span class="n">streamer</span><span class="o">.</span><span class="n">send_state</span><span class="p">(</span><span class="n">mjd</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Key Distinction:</strong></p>
+<ul class="simple">
+<li><p><strong>Server Machine</strong>: Runs <code class="docutils literal notranslate"><span class="pre">test_headless.py</span></code> - executes the simulation, sends state packets</p></li>
+<li><p><strong>Client Machine</strong>: Runs a streaming client (see examples above) to receive packets and render in MuJoCo viewer</p></li>
+</ul>
+</section>
+</section>
+<section id="alternative-test-viewer-py-local-viewer">
+<h3>Alternative: test_viewer.py (Local Viewer)<a class="headerlink" href="#alternative-test-viewer-py-local-viewer" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">test_viewer.py</span></code> script is a <strong>standalone local viewer</strong> that runs on a single machine with the simulation. Unlike a dedicated streaming client, it does not connect to a remote streaming server. Instead, it:</p>
+<ul class="simple">
+<li><p>Loads a model locally</p></li>
+<li><p>Runs a simulation using the same engines (MJC, MJWARP, or COMFREE_WARP)</p></li>
+<li><p>Displays the simulation in real-time using MuJoCo’s passive viewer</p></li>
+</ul>
+<p>This is useful for debugging locally before deploying to remote headless simulation, or for benchmarking with visualization.</p>
+</section>
+<section id="example-1-local-headless-simulation-with-streaming">
+<h3>Example 1: Local Headless Simulation with Streaming<a class="headerlink" href="#example-1-local-headless-simulation-with-streaming" title="Link to this heading">#</a></h3>
+<p><strong>Terminal 1 - Run headless simulation with streaming:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">MJSTREAM_HOST</span><span class="o">=</span><span class="m">127</span>.0.0.1
+<span class="nb">export</span><span class="w"> </span><span class="nv">MJSTREAM_PORT</span><span class="o">=</span><span class="m">6000</span>
+python<span class="w"> </span>test_headless.py
+</pre></div>
+</div>
+<p><strong>Terminal 2 - View the stream locally (using a client):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>local_viewer.py<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">6000</span>
+</pre></div>
+</div>
+</section>
+<section id="example-2-remote-simulation-with-ssh-tunnel">
+<h3>Example 2: Remote Simulation with SSH Tunnel<a class="headerlink" href="#example-2-remote-simulation-with-ssh-tunnel" title="Link to this heading">#</a></h3>
+<p><strong>Terminal 1 - SSH to remote server and run simulation:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>user@remote-server
+<span class="nb">cd</span><span class="w"> </span>/path/to/repo
+<span class="nb">export</span><span class="w"> </span><span class="nv">MJSTREAM_PORT</span><span class="o">=</span><span class="m">6000</span>
+python<span class="w"> </span>test_headless.py
+</pre></div>
+</div>
+<p><strong>Terminal 2 - Create SSH tunnel (from your local machine):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">6000</span>:127.0.0.1:6000<span class="w"> </span>user@remote-server
+</pre></div>
+</div>
+<p><strong>Terminal 3 - View the stream:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>local_viewer.py<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">6000</span>
+</pre></div>
+</div>
+</section>
+<section id="example-3-benchmark-multiple-models">
+<h3>Example 3: Benchmark Multiple Models<a class="headerlink" href="#example-3-benchmark-multiple-models" title="Link to this heading">#</a></h3>
+<p>Run headless simulations for benchmarking without visualization overhead:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;model1.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;model2.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;model3.xml&quot;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">env</span><span class="p">[</span><span class="s2">&quot;MJSTREAM_PORT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>  <span class="c1"># Disable streaming for benchmarks</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;test_headless.py&quot;</span><span class="p">],</span>
+        <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
+        <span class="n">cwd</span><span class="o">=</span><span class="s2">&quot;/path/to/simulations&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<p><strong>Connection refused error:</strong></p>
+<ul class="simple">
+<li><p>Verify the server is running and listening on the specified port</p></li>
+<li><p>Check firewall settings and port exposure</p></li>
+<li><p>Ensure host and port match between server and client</p></li>
+</ul>
+<p><strong>Model loading error:</strong></p>
+<ul class="simple">
+<li><p>Ensure model file path is correct and accessible</p></li>
+<li><p>If using relative paths, run from the correct directory</p></li>
+<li><p>Check file permissions</p></li>
+</ul>
+<p><strong>Viewer closes immediately:</strong></p>
+<ul class="simple">
+<li><p>Check for Python errors in the simulation script</p></li>
+<li><p>Ensure model path is valid</p></li>
+<li><p>Review simulation parameters (nworld, njmax, nconmax)</p></li>
+</ul>
+<p><strong>High latency on remote connection:</strong></p>
+<ul class="simple">
+<li><p>Check network bandwidth between server and client</p></li>
+<li><p>Consider reducing simulation state streaming frequency</p></li>
+<li><p>Use SSH tunnel compression: <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-C</span> <span class="pre">-L</span> <span class="pre">6000:127.0.0.1:6000</span> <span class="pre">user&#64;remote-server</span></code></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./pages"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="difference.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">How ComFree Warp Differs from MuJoCo Warp</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="known-issues.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Known Issues</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#headless-simulation">Headless Simulation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-headless-simulations">Running Headless Simulations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-options">Configuration Options</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-streaming">Simulation Streaming</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-server-setup">Streaming Server Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-client-setup">Streaming Client Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-ssh-tunneling-for-remote-access">Using SSH Tunneling for Remote Access</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-client-options">Example Client Options</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-streaming-client-implementation">Example Streaming Client Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components-from-streaming-py-client-side">Key Components from streaming.py (Client Side)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-client-local-machine">Example client (local machine)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#server-machine-test-headless-py-usage">Server Machine: test_headless.py Usage</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-test-viewer-py-local-viewer">Alternative: test_viewer.py (Local Viewer)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-local-headless-simulation-with-streaming">Example 1: Local Headless Simulation with Streaming</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-remote-simulation-with-ssh-tunnel">Example 2: Remote Simulation with SSH Tunnel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-benchmark-multiple-models">Example 3: Benchmark Multiple Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By ASU IRIS Lab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

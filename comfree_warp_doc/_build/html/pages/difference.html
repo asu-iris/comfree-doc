@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>How ComFree Warp Differs from MuJoCo Warp &#8212; ComFree Warp Documentation</title>
+    <title>How ComFree Warp Differs from MJWarp &#8212; ComFree Warp Documentation</title>
   
   
   
@@ -60,8 +60,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'pages/difference';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Known Issues" href="known-issues.html" />
-    <link rel="prev" title="ComFree Contact Parameter Settings" href="cfwarp-params.html" />
+    <link rel="next" title="Headless Simulation and Streaming" href="headless-streaming.html" />
+    <link rel="prev" title="ComFree Contact Parameters" href="cfwarp-params.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -179,13 +179,23 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
-<ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mjwarp-usage.html">MJWarp Preliminary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using ComFree Warp</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cfwarp-usage.html">ComFree Warp Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameter Settings</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">How ComFree Warp Differs from MuJoCo Warp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameters</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">How ComFree Warp Differs from MJWarp</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="headless-streaming.html">Headless Simulation and Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="known-issues.html">Known Issues</a></li>
 </ul>
 
@@ -372,7 +382,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>How ComFree Warp Differs from MuJoCo Warp</h1>
+    <h1>How ComFree Warp Differs from MJWarp</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -382,24 +392,29 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-from-the-public-api">Start from the Public API</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-provided-apis">ComFree-provided APIs</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unchanged-mjwarp-re-exports">Unchanged MJWarp Re-exports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#high-level-summary">High-Level Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#public-api-structure">Public API Structure</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-provided-api">ComFree-Provided API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unchanged-mjwarp-re-exports">Unchanged MJWarp Re-Exports</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-stays-the-same">What Stays the Same</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-migration">Typical Migration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-at-a-glance">Comparison at a Glance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-stays-the-same">What Stays the Same</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-extended">What Is Extended</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model"><code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-and-make-data"><code class="docutils literal notranslate"><span class="pre">put_data(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">make_data(...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-data-into"><code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-and-data"><code class="docutils literal notranslate"><span class="pre">Model</span></code> and <code class="docutils literal notranslate"><span class="pre">Data</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changes">What Changes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-and-forward"><code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model"><code class="docutils literal notranslate"><span class="pre">put_model</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-make-data-and-get-data-into"><code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data"><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-replaced-internally">What Is Replaced Internally</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward"><code class="docutils literal notranslate"><span class="pre">forward(...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step"><code class="docutils literal notranslate"><span class="pre">step(...)</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-migration">Typical Migration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-by-function-summary">Function-by-Function Summary</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-guide">Reading Guide</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-guidance">Practical Guidance</a></li>
 </ul>
             </nav>
         </div>
@@ -411,66 +426,162 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="how-comfree-warp-differs-from-mujoco-warp">
-<h1>How ComFree Warp Differs from MuJoCo Warp<a class="headerlink" href="#how-comfree-warp-differs-from-mujoco-warp" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is designed to feel familiar to users of <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>. For most day-to-day usage, it should feel like the same interface, with ComFree-specific behavior added underneath.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="how-comfree-warp-differs-from-mjwarp">
+<h1>How ComFree Warp Differs from MJWarp<a class="headerlink" href="#how-comfree-warp-differs-from-mjwarp" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is designed to stay close to <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> at the user-facing API level, while changing the internal contact-resolution pipeline.</p>
+<p>The most useful mental model is:</p>
+<ul class="simple">
+<li><p>the outer workflow is almost the same as MJWarp</p></li>
+<li><p>many public helper APIs are still re-exported unchanged</p></li>
+<li><p>the main user-facing extension is on <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code></p></li>
+<li><p>the main behavioral change is in <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">step(...)</span></code></p></li>
+</ul>
+<section id="high-level-summary">
+<h2>High-Level Summary<a class="headerlink" href="#high-level-summary" title="Link to this heading">#</a></h2>
+<p>If you already know MJWarp, the typical workflow still looks like:</p>
+<ol class="arabic simple">
+<li><p>Load a MuJoCo model and <code class="docutils literal notranslate"><span class="pre">MjData</span></code>.</p></li>
+<li><p>Move them to device with <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">put_data(...)</span></code>.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">step(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code>.</p></li>
+<li><p>Pull state back with <code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code> when needed.</p></li>
+</ol>
+<p>That is why most MJWarp code can be adapted with only small changes.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>The quickest way to think about <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is:</p>
-<ul class="simple">
-<li><p>the overall workflow is almost the same as <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code></p></li>
-<li><p>many top-level function names are the same</p></li>
-<li><p>for most core APIs, the input and output usage stays the same</p></li>
-<li><p>the most important behavioral differences are in the ComFree solver path</p></li>
-</ul>
-<p>So <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> should mostly read like a drop-in alternative, not like a completely different API.</p>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> should be thought of as a near drop-in MJWarp alternative, not as a completely separate simulator interface.</p>
+<p>However, it is not just a rename of MJWarp. The ComFree wrapper changes model parameters, data fields, and the forward/step implementation.</p>
 </div>
-<section id="start-from-the-public-api">
-<h2>Start from the Public API<a class="headerlink" href="#start-from-the-public-api" title="Link to this heading">#</a></h2>
-<p>The cleanest way to understand the differences is to start from <code class="docutils literal notranslate"><span class="pre">comfree_warp/__init__.py</span></code>, because that file shows what the package exposes to users.</p>
-<p>At the top level, the exported APIs fall into two groups.</p>
-<section id="comfree-provided-apis">
-<h3>ComFree-provided APIs<a class="headerlink" href="#comfree-provided-apis" title="Link to this heading">#</a></h3>
-<p>These are the APIs that <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> provides from its own implementation:</p>
+</section>
+<section id="public-api-structure">
+<h2>Public API Structure<a class="headerlink" href="#public-api-structure" title="Link to this heading">#</a></h2>
+<p>Looking at <code class="docutils literal notranslate"><span class="pre">comfree_warp/__init__.py</span></code>, the exported names fall into two categories.</p>
+<section id="comfree-provided-api">
+<h3>ComFree-Provided API<a class="headerlink" href="#comfree-provided-api" title="Link to this heading">#</a></h3>
+<p>These are the main APIs whose behavior is defined by the ComFree wrapper or ComFree core:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">put_model</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">put_data</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">make_data</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">forward</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Model</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Data</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">make_constraint</span></code></p></li>
 </ul>
-<p>These are the most important APIs to compare against <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>. However, for most of them, the user-facing call pattern remains the same.</p>
 </section>
 <section id="unchanged-mjwarp-re-exports">
-<h3>Unchanged MJWarp Re-exports<a class="headerlink" href="#unchanged-mjwarp-re-exports" title="Link to this heading">#</a></h3>
-<p>Many other public names are re-exported directly from <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, including:</p>
+<h3>Unchanged MJWarp Re-Exports<a class="headerlink" href="#unchanged-mjwarp-re-exports" title="Link to this heading">#</a></h3>
+<p>Many other public helpers are re-exported directly from vendored <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, including:</p>
 <ul class="simple">
 <li><p>collision and broadphase helpers</p></li>
 <li><p>rendering and ray-query helpers</p></li>
-<li><p>smooth dynamics helpers</p></li>
+<li><p>smooth-dynamics helpers</p></li>
 <li><p>sensor helpers</p></li>
-<li><p>shared types and enums</p></li>
+<li><p>support utilities</p></li>
 </ul>
-<p>These are mainly preserved so that the package stays familiar and compatible with MJWarp-style code.</p>
+<p>This is one reason the package still feels familiar to MJWarp users.</p>
 </section>
+</section>
+<section id="comparison-at-a-glance">
+<h2>Comparison at a Glance<a class="headerlink" href="#comparison-at-a-glance" title="Link to this heading">#</a></h2>
+<p>The practical comparison is:</p>
+<ul class="simple">
+<li><p>same overall workflow</p></li>
+<li><p>same broad role for the main host-to-device and device-to-host APIs</p></li>
+<li><p>extra ComFree parameters on <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code></p></li>
+<li><p>extra ComFree buffers in device-side data</p></li>
+<li><p>different internal contact-resolution behavior in <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">step(...)</span></code></p></li>
+</ul>
 </section>
 <section id="what-stays-the-same">
 <h2>What Stays the Same<a class="headerlink" href="#what-stays-the-same" title="Link to this heading">#</a></h2>
-<p>The main simulation workflow remains almost the same:</p>
-<ol class="arabic simple">
-<li><p>Load a MuJoCo model with <code class="docutils literal notranslate"><span class="pre">mujoco</span></code>.</p></li>
-<li><p>Convert it with <code class="docutils literal notranslate"><span class="pre">put_model</span></code> and <code class="docutils literal notranslate"><span class="pre">put_data</span></code>.</p></li>
-<li><p>Run simulation with <code class="docutils literal notranslate"><span class="pre">step</span></code> or <code class="docutils literal notranslate"><span class="pre">forward</span></code>.</p></li>
-<li><p>Copy data back with <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code> if needed.</p></li>
-</ol>
-<p>That is why most MJWarp code can be adapted with only very small changes.</p>
+<p>The following points are intentionally preserved:</p>
+<ul class="simple">
+<li><p>the overall host-to-device workflow</p></li>
+<li><p>the role of <code class="docutils literal notranslate"><span class="pre">put_model</span></code>, <code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">forward</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></p></li>
+<li><p>the basic device-side <code class="docutils literal notranslate"><span class="pre">Model</span></code> / <code class="docutils literal notranslate"><span class="pre">Data</span></code> abstraction</p></li>
+<li><p>many non-solver helper APIs re-exported from MJWarp</p></li>
+</ul>
+<p>In day-to-day usage, this means existing MJWarp scripts usually require only limited changes in setup code.</p>
+</section>
+<section id="what-is-extended">
+<h2>What Is Extended<a class="headerlink" href="#what-is-extended" title="Link to this heading">#</a></h2>
+<section id="put-model">
+<h3><code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code><a class="headerlink" href="#put-model" title="Link to this heading">#</a></h3>
+<p>This is the clearest user-visible API extension.</p>
+<p>In the current wrapper implementation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> first calls vendored <code class="docutils literal notranslate"><span class="pre">mujoco_warp.put_model(...)</span></code></p></li>
+<li><p>it then attaches <code class="docutils literal notranslate"><span class="pre">m.comfree_stiffness</span></code></p></li>
+<li><p>it also attaches <code class="docutils literal notranslate"><span class="pre">m.comfree_damping</span></code></p></li>
+</ul>
+<p>Both parameters are stored as device-side Warp arrays and may be provided as scalars or vectors.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
+    <span class="n">mjm</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="put-data-and-make-data">
+<h3><code class="docutils literal notranslate"><span class="pre">put_data(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">make_data(...)</span></code><a class="headerlink" href="#put-data-and-make-data" title="Link to this heading">#</a></h3>
+<p>These functions still follow the MJWarp allocation pattern, but the wrapper ensures that additional ComFree-specific device buffers exist.</p>
+<p>From the current <code class="docutils literal notranslate"><span class="pre">api.py</span></code>, those extra fields include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">d.efc.efc_dist</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d.efc.efc_mass</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d.qvel_smooth_pred</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d.qfrc_total</span></code></p></li>
+</ul>
+<p>So the usage pattern remains familiar, but the resulting device data is extended to support the ComFree solver path.</p>
+</section>
+<section id="get-data-into">
+<h3><code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code><a class="headerlink" href="#get-data-into" title="Link to this heading">#</a></h3>
+<p>This function still plays the same role as in MJWarp: it copies one selected world from device into an existing host-side <code class="docutils literal notranslate"><span class="pre">mujoco.MjData</span></code>.</p>
+<p>The wrapper keeps the familiar call pattern while ensuring the ComFree-extended data object remains usable.</p>
+</section>
+<section id="model-and-data">
+<h3><code class="docutils literal notranslate"><span class="pre">Model</span></code> and <code class="docutils literal notranslate"><span class="pre">Data</span></code><a class="headerlink" href="#model-and-data" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> also exposes <code class="docutils literal notranslate"><span class="pre">Model</span></code> and <code class="docutils literal notranslate"><span class="pre">Data</span></code> from the ComFree type definitions rather than directly exposing the vendored MJWarp versions.</p>
+<p>Conceptually, they play the same role as the MJWarp device-side structures, but they include the extra fields needed by the ComFree solver path.</p>
+</section>
+</section>
+<section id="what-is-replaced-internally">
+<h2>What Is Replaced Internally<a class="headerlink" href="#what-is-replaced-internally" title="Link to this heading">#</a></h2>
+<section id="forward">
+<h3><code class="docutils literal notranslate"><span class="pre">forward(...)</span></code><a class="headerlink" href="#forward" title="Link to this heading">#</a></h3>
+<p>This is one of the main behavioral differences.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code>, <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> maps to <code class="docutils literal notranslate"><span class="pre">forward_comfree(...)</span></code>, not to the original MJWarp forward path.</p>
+<p>The ComFree forward pipeline still reuses much of the MJWarp smooth-dynamics stack, but replaces the contact-resolution stage. In the current source, the pipeline includes:</p>
+<ul class="simple">
+<li><p>smooth kinematics and dynamics setup</p></li>
+<li><p>collision detection</p></li>
+<li><p>ComFree constraint construction</p></li>
+<li><p>smooth acceleration computation</p></li>
+<li><p>ComFree contact-force assembly</p></li>
+<li><p>acceleration solve using the total generalized force</p></li>
+</ul>
+</section>
+<section id="step">
+<h3><code class="docutils literal notranslate"><span class="pre">step(...)</span></code><a class="headerlink" href="#step" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">step(...)</span></code> maps to <code class="docutils literal notranslate"><span class="pre">step_comfree(...)</span></code>, not to the original MJWarp step function.</p>
+<p>In the current implementation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">step(...)</span></code> first runs <code class="docutils literal notranslate"><span class="pre">forward_comfree(...)</span></code></p></li>
+<li><p>it then integrates using the selected device-side integrator path</p></li>
+<li><p>the ComFree step path currently supports Euler and <code class="docutils literal notranslate"><span class="pre">IMPLICITFAST</span></code></p></li>
+</ul>
+<p>So although the function name and calling style remain familiar, the simulation behavior should not be expected to be numerically identical to MJWarp.</p>
+</section>
+</section>
 <section id="typical-migration">
-<h3>Typical Migration<a class="headerlink" href="#typical-migration" title="Link to this heading">#</a></h3>
+<h2>Typical Migration<a class="headerlink" href="#typical-migration" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MJWarp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">mujoco_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mjwarp</span>
 
@@ -484,7 +595,7 @@ document.write(`
 
 <span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
     <span class="n">mjm</span><span class="p">,</span>
-    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -493,107 +604,66 @@ document.write(`
 </pre></div>
 </div>
 </section>
-</section>
-<section id="what-changes">
-<h2>What Changes<a class="headerlink" href="#what-changes" title="Link to this heading">#</a></h2>
-<p>Before looking at the detailed differences, the most important compatibility point is this:</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For <code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code>, <code class="docutils literal notranslate"><span class="pre">reset_data</span></code>, <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">forward</span></code>, <code class="docutils literal notranslate"><span class="pre">Model</span></code>, <code class="docutils literal notranslate"><span class="pre">Data</span></code>, and <code class="docutils literal notranslate"><span class="pre">make_constraint</span></code>, <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is intended to keep the same user-facing role as <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>.</p>
-<p>In practice, the main API-level extension users usually notice is on <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code>, which adds <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>.</p>
-<p>For the rest, the function names, expected arguments, and overall input/output usage are intended to feel the same, even though the internal implementation may be extended or replaced.</p>
-</div>
-<section id="step-and-forward">
-<h3><code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code><a class="headerlink" href="#step-and-forward" title="Link to this heading">#</a></h3>
-<p>These are the most important implementation differences.</p>
-<p>Although the function names and user-facing usage are the same, <code class="docutils literal notranslate"><span class="pre">comfree_warp.step(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_warp.forward(...)</span></code> do not run the original MJWarp physics pipeline. They run the ComFree solver and ComFree forward pipeline instead.</p>
-<p>If you want to know where the simulator behavior really changes, start here.</p>
-</section>
-<section id="put-model">
-<h3><code class="docutils literal notranslate"><span class="pre">put_model</span></code><a class="headerlink" href="#put-model" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> is the clearest user-visible API extension.</p>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_warp.put_model(...)</span></code> extends the MJWarp-style API by adding:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></p></li>
-</ul>
-<p>These are the main new user-facing inputs for ComFree contact behavior.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span>
-
-<span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
-    <span class="n">mjm</span><span class="p">,</span>
-    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="put-data-make-data-and-get-data-into">
-<h3><code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code><a class="headerlink" href="#put-data-make-data-and-get-data-into" title="Link to this heading">#</a></h3>
-<p>These functions still follow the MJWarp workflow and are meant to be used in the same way, but they extend the underlying Warp-side data structures with extra ComFree-related fields needed by the solver.</p>
-<p>In normal usage, this is handled automatically. From the user side, they should still feel like the same API calls.</p>
-</section>
-<section id="reset-data">
-<h3><code class="docutils literal notranslate"><span class="pre">reset_data</span></code><a class="headerlink" href="#reset-data" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">reset_data</span></code> keeps the same role as in MJWarp and is effectively used in the same way.</p>
-</section>
-</section>
 <section id="function-by-function-summary">
 <h2>Function-by-Function Summary<a class="headerlink" href="#function-by-function-summary" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Function</p></th>
-<th class="head"><p>Relationship to <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code></p></th>
-<th class="head"><p>What it means for users</p></th>
+<th class="head"><p>Relationship to MJWarp</p></th>
+<th class="head"><p>User-facing meaning</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">put_model</span></code></p></td>
 <td><p>Extended</p></td>
-<td><p>Same role as MJWarp, with extra ComFree parameters</p></td>
+<td><p>Same role as MJWarp, with additional ComFree contact parameters</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">put_data</span></code></p></td>
 <td><p>Extended</p></td>
-<td><p>Same usage pattern as MJWarp</p></td>
+<td><p>Same allocation/copy role, with extra ComFree device buffers</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">make_data</span></code></p></td>
 <td><p>Extended</p></td>
-<td><p>Same usage pattern as MJWarp</p></td>
+<td><p>Same allocation role, with extra ComFree device buffers</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></p></td>
-<td><p>Extended</p></td>
-<td><p>Same usage pattern as MJWarp</p></td>
+<td><p>Extended wrapper</p></td>
+<td><p>Same role as MJWarp for copying one world back to host</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></p></td>
 <td><p>Delegated</p></td>
-<td><p>Same usage pattern as MJWarp</p></td>
+<td><p>Same role and usage pattern as MJWarp</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">step</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">forward</span></code></p></td>
 <td><p>Replaced internally</p></td>
-<td><p>Same user-facing call, different solver behavior underneath</p></td>
+<td><p>Same top-level role, different contact-resolution pipeline</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">forward</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">step</span></code></p></td>
 <td><p>Replaced internally</p></td>
-<td><p>Same user-facing call, different forward behavior underneath</p></td>
+<td><p>Same top-level role, different solver behavior underneath</p></td>
 </tr>
-<tr class="row-odd"><td><p>many other helpers exported in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Model</span></code> / <code class="docutils literal notranslate"><span class="pre">Data</span></code></p></td>
+<td><p>Extended types</p></td>
+<td><p>Same conceptual role, with extra ComFree fields</p></td>
+</tr>
+<tr class="row-even"><td><p>many helper APIs</p></td>
 <td><p>Unchanged re-export</p></td>
-<td><p>Mostly kept for compatibility and familiarity</p></td>
+<td><p>Preserved mainly for compatibility and familiarity</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
-<section id="reading-guide">
-<h2>Reading Guide<a class="headerlink" href="#reading-guide" title="Link to this heading">#</a></h2>
-<p>If you already know MJWarp, the most useful mental model is:</p>
+<section id="practical-guidance">
+<h2>Practical Guidance<a class="headerlink" href="#practical-guidance" title="Link to this heading">#</a></h2>
+<p>If you are coming from MJWarp, the key points are:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> keeps the same outer workflow</p></li>
-<li><p>for most core APIs, the user-facing input/output pattern stays the same</p></li>
-<li><p>ComFree mainly changes the engine-facing solver path</p></li>
-<li><p>many helper APIs are still available in familiar form</p></li>
+<li><p>start by assuming the workflow is the same</p></li>
+<li><p>expect <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> to be the main API extension</p></li>
+<li><p>expect <code class="docutils literal notranslate"><span class="pre">step(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> to be the main behavioral differences</p></li>
+<li><p>expect many lower-level helper APIs to still be available unchanged</p></li>
 </ul>
-<p>That is why <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> feels close to MJWarp while still being a different simulator backend.</p>
+<p>That combination is what makes <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> feel familiar at the interface level while still being meaningfully different as a simulator backend.</p>
 </section>
 </section>
 
@@ -633,15 +703,15 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">ComFree Contact Parameter Settings</p>
+        <p class="prev-next-title">ComFree Contact Parameters</p>
       </div>
     </a>
     <a class="right-next"
-       href="known-issues.html"
+       href="headless-streaming.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Known Issues</p>
+        <p class="prev-next-title">Headless Simulation and Streaming</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -661,24 +731,29 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-from-the-public-api">Start from the Public API</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-provided-apis">ComFree-provided APIs</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unchanged-mjwarp-re-exports">Unchanged MJWarp Re-exports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#high-level-summary">High-Level Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#public-api-structure">Public API Structure</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-provided-api">ComFree-Provided API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unchanged-mjwarp-re-exports">Unchanged MJWarp Re-Exports</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-stays-the-same">What Stays the Same</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-migration">Typical Migration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-at-a-glance">Comparison at a Glance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-stays-the-same">What Stays the Same</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-extended">What Is Extended</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model"><code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-and-make-data"><code class="docutils literal notranslate"><span class="pre">put_data(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">make_data(...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-data-into"><code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-and-data"><code class="docutils literal notranslate"><span class="pre">Model</span></code> and <code class="docutils literal notranslate"><span class="pre">Data</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changes">What Changes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-and-forward"><code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model"><code class="docutils literal notranslate"><span class="pre">put_model</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-make-data-and-get-data-into"><code class="docutils literal notranslate"><span class="pre">put_data</span></code>, <code class="docutils literal notranslate"><span class="pre">make_data</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data"><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-replaced-internally">What Is Replaced Internally</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward"><code class="docutils literal notranslate"><span class="pre">forward(...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step"><code class="docutils literal notranslate"><span class="pre">step(...)</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-migration">Typical Migration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-by-function-summary">Function-by-Function Summary</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-guide">Reading Guide</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-guidance">Practical Guidance</a></li>
 </ul>
   </nav></div>
 
@@ -700,13 +775,6 @@ By ASU IRIS Lab
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

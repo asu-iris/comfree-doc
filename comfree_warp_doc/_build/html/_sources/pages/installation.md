@@ -1,56 +1,51 @@
 # Installation Guide
 
-This page describes how to install `comfree_warp` based on the current source tree in this repository.
+This page describes how to install `comfree_warp` based on the current upstream source layout and package metadata.
 
-## What ComFree Warp Ships
+## Relationship to `mujoco_warp`
 
-`comfree_warp` ships with the code it needs for its ComFree interface, so you do not need to install upstream `mujoco_warp` separately just to use `comfree_warp`.
+`comfree_warp` is developed on top of `mujoco_warp`. However, to minimize external dependencies and reduce version-conflict issues, the `comfree_warp` package also vendors its own in-tree copy of `mujoco_warp`.
 
-The relevant package files are:
+This means:
 
-- `comfree_warp/comfree_warp/api.py`
-- `comfree_warp/comfree_warp/__init__.py`
+- when you install `comfree_warp`, the vendored `mujoco_warp` implementation is installed as part of the package
+- you do not need to install `mujoco_warp` separately in order to use `comfree_warp`
+- if you have already installed `mujoco_warp` separately, that is still fine
+- `comfree_warp` depends on its vendored `mujoco_warp`, not on a separately installed external copy
 
-If you separately install the official `mujoco_warp` package and want to use it directly, you can still do:
+The currently vendored `mujoco_warp` snapshot corresponds to upstream commit `89be29a262e4209c8cba1ebe66f5bfd1905a3261`.
 
-```python
-import mujoco_warp
-```
+## Requirements
 
-That standalone upstream package can be a good choice when you want the most up-to-date official `mujoco_warp` version.
+According to `pyproject.toml`, `comfree_warp` currently requires:
 
-The `comfree_warp` repository may pull upstream `mujoco_warp` updates periodically, but it should not be assumed to track upstream continuously in real time.
+- Python `>=3.10`
+- `warp-lang>=1.12`
+- `mujoco==3.6.0`
 
-## What You Need To Install
+You do not need to install upstream `mujoco_warp` separately in order to use `comfree_warp`.
 
-To use `comfree_warp`, you do **not** need to install upstream `mujoco_warp` separately.
+## Install from Source
 
-You only need:
-
-- `mujoco`
-- `warp` / `warp-lang`
-- the `comfree_warp` repository itself
-
-The main import for ComFree usage is:
-
-- `import comfree_warp`
-
-## Installation Methods
-
-### Option 1: Using pip
+Clone the repository and install it from the project root:
 
 ```bash
-pip install mujoco
-pip install warp-lang
+git clone https://github.com/asu-iris/comfree_warp.git
+cd comfree_warp
+pip install .
+```
 
+If you want an editable local development install instead, use:
+
+```bash
 git clone https://github.com/asu-iris/comfree_warp.git
 cd comfree_warp
 pip install -e .
 ```
 
-### Option 2: Using uv
+## Install with uv
 
-`uv` is a fast Python package and environment manager. If your `comfree_warp` checkout defines dependencies in `pyproject.toml`, `uv` can install them together:
+If you use `uv`, the repository README also supports installing from the project root with:
 
 ```bash
 git clone https://github.com/asu-iris/comfree_warp.git
@@ -58,14 +53,13 @@ cd comfree_warp
 uv sync
 ```
 
-## Verification
+## Verify the Installation
 
 After installation, verify that the main package imports correctly:
 
 ```python
 import mujoco
 import warp as wp
-
 import comfree_warp
 
 print("MuJoCo:", mujoco.__version__)
@@ -73,37 +67,31 @@ print("Warp:", wp.__version__)
 print("ComFree package:", comfree_warp.__name__)
 ```
 
-## Version Notes
-
-The current source tree does not include a pinned package metadata file in this docs repository, so this page avoids claiming a stricter tested matrix than the code itself shows.
-
-What the source does show is:
-
-- the codebase includes compatibility logic around `warp-lang >= 1.12`
-- the codebase includes compatibility logic around `mujoco > 3.4.0`
-- the documentation build uses Python 3.10
-
-In practice, a safe starting point is:
-
-- Python 3.10
-- a recent `mujoco` release in the 3.4+ range
-- a recent `warp-lang` release around the 1.12+ range
-
-If you maintain this repository, the best next improvement is to replace this section with the exact MuJoCo and Warp versions you have validated on your target platform.
-
-## Import Note
-
-For ComFree usage, import:
+For ComFree usage, the main import is:
 
 ```python
 import comfree_warp
 ```
 
-If you separately installed the official upstream package and want to use that package directly instead, use:
+## Quick Sanity Checks
 
-```python
-import mujoco_warp
-```
+The upstream repository currently documents the following example entry points:
+
+- interactive viewer: `python tests_local_viewer/test_viewer.py`
+- headless simulation: `python test_headless.py`
+- throughput benchmark: `python tests_local_viewer/test_throuput_hand.py`
+
+These are useful after installation if you want to confirm the package is running correctly in your environment.
+
+## Version Notes
+
+The current package metadata explicitly declares:
+
+- Python `>=3.10`
+- `warp-lang>=1.12`
+- `mujoco==3.6.0`
+
+If installation or import fails, verify these versions first before debugging higher-level runtime issues.
 
 ## Next Step
 

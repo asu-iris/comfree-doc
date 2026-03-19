@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'pages/cfwarp-usage';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ComFree Contact Parameter Settings" href="cfwarp-params.html" />
+    <link rel="next" title="ComFree Contact Parameters" href="cfwarp-params.html" />
     <link rel="prev" title="MJWarp Preliminary" href="mjwarp-usage.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -179,13 +179,23 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
-<ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mjwarp-usage.html">MJWarp Preliminary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using ComFree Warp</span></p>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">ComFree Warp Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameter Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameters</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="headless-streaming.html">Headless Simulation and Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="known-issues.html">Known Issues</a></li>
 </ul>
 
@@ -382,20 +392,22 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-overview">Workflow Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-example">Minimal Example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-apis">Core APIs</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model-mjspec-comfree-stiffness-0-1-comfree-damping-0-001"><code class="docutils literal notranslate"><span class="pre">put_model(mjspec,</span> <span class="pre">comfree_stiffness=0.1,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-mjspec-mjdata-nworld-1-nconmax-1000-njmax-5000"><code class="docutils literal notranslate"><span class="pre">put_data(mjspec,</span> <span class="pre">mjdata,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-data-mjspec-nworld-1-nconmax-1000-njmax-5000"><code class="docutils literal notranslate"><span class="pre">make_data(mjspec,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-data-into-mjdata-mjspec-warp-data"><code class="docutils literal notranslate"><span class="pre">get_data_into(mjdata,</span> <span class="pre">mjspec,</span> <span class="pre">warp_data)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data-mjspec-warp-data"><code class="docutils literal notranslate"><span class="pre">reset_data(mjspec,</span> <span class="pre">warp_data)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-model-data"><code class="docutils literal notranslate"><span class="pre">step(model,</span> <span class="pre">data)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-model-data"><code class="docutils literal notranslate"><span class="pre">forward(model,</span> <span class="pre">data)</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changes-relative-to-mjwarp">What Changes Relative to MJWarp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api-reference">API Reference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model-mjm-comfree-stiffness-0-2-comfree-damping-0-001"><code class="docutils literal notranslate"><span class="pre">put_model(mjm,</span> <span class="pre">comfree_stiffness=0.2,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-mjm-mjd-nworld-1-nconmax-none-nccdmax-none-njmax-none-naconmax-none-naccdmax-none"><code class="docutils literal notranslate"><span class="pre">put_data(mjm,</span> <span class="pre">mjd,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=None,</span> <span class="pre">nccdmax=None,</span> <span class="pre">njmax=None,</span> <span class="pre">naconmax=None,</span> <span class="pre">naccdmax=None)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-data-mjm-nworld-1-nconmax-none-nccdmax-none-njmax-none-naconmax-none-naccdmax-none"><code class="docutils literal notranslate"><span class="pre">make_data(mjm,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=None,</span> <span class="pre">nccdmax=None,</span> <span class="pre">njmax=None,</span> <span class="pre">naconmax=None,</span> <span class="pre">naccdmax=None)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-data-into-result-mjm-d-world-id-0"><code class="docutils literal notranslate"><span class="pre">get_data_into(result,</span> <span class="pre">mjm,</span> <span class="pre">d,</span> <span class="pre">world_id=0)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data-m-d-reset-none"><code class="docutils literal notranslate"><span class="pre">reset_data(m,</span> <span class="pre">d,</span> <span class="pre">reset=None)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-m-d-factorize-true"><code class="docutils literal notranslate"><span class="pre">forward(m,</span> <span class="pre">d,</span> <span class="pre">factorize=True)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-m-d"><code class="docutils literal notranslate"><span class="pre">step(m,</span> <span class="pre">d)</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-example">Batch Example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-world-example">Multi-World Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-notes">Practical Notes</a></li>
 </ul>
             </nav>
         </div>
@@ -409,22 +421,32 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="comfree-warp-usage">
 <h1>ComFree Warp Usage<a class="headerlink" href="#comfree-warp-usage" title="Link to this heading">#</a></h1>
-<p>This page shows how to use the <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> API directly.</p>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> keeps the same overall workflow as <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, but replaces the core solver path with the ComFree formulation. In practice, that means you still use the familiar sequence:</p>
+<p>This page describes the public <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> API as implemented in the source tree.</p>
+<p>At the API level, <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is intentionally close to <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>. The package reuses the MJWarp-style model/data conversion path, but replaces the forward and stepping pipeline with the ComFree contact formulation.</p>
+<section id="workflow-overview">
+<h2>Workflow Overview<a class="headerlink" href="#workflow-overview" title="Link to this heading">#</a></h2>
+<p>In broad terms, the workflow is:</p>
 <ol class="arabic simple">
-<li><p>Load a MuJoCo model.</p></li>
-<li><p>Convert it with <code class="docutils literal notranslate"><span class="pre">put_model</span></code> and <code class="docutils literal notranslate"><span class="pre">put_data</span></code>.</p></li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">step</span></code> or <code class="docutils literal notranslate"><span class="pre">forward</span></code>.</p></li>
-<li><p>Copy data back with <code class="docutils literal notranslate"><span class="pre">get_data_into</span></code> if needed.</p></li>
+<li><p>Load a MuJoCo model and allocate <code class="docutils literal notranslate"><span class="pre">MjData</span></code>.</p></li>
+<li><p>Move the model and data onto device with <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">put_data(...)</span></code>.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">step(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code>.</p></li>
+<li><p>Copy one world back into MuJoCo with <code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code> when host-side access is needed.</p></li>
 </ol>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is intended to be a near drop-in alternative to <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>.</p>
-<p>For most core APIs, the user-facing call pattern stays the same. The main user-visible extension is on <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code>, which adds optional ComFree parameters such as <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>.</p>
-<p>See <a class="reference internal" href="cfwarp-params.html"><span class="std std-doc">ComFree Contact Params Setting</span></a> for how these parameters are set and interpreted.</p>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> is designed to be a near drop-in alternative to <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, but it is not just a rename.</p>
+<p>In the current source tree:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> extends the MJWarp model with <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">put_data(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">make_data(...)</span></code> reuse the MJWarp allocation path and then add ComFree-specific device buffers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> maps to <code class="docutils literal notranslate"><span class="pre">forward_comfree(...)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step(...)</span></code> maps to <code class="docutils literal notranslate"><span class="pre">step_comfree(...)</span></code></p></li>
+</ul>
+<p>See <a class="reference internal" href="cfwarp-params.html"><span class="std std-doc">ComFree Contact Parameter Settings</span></a> for the parameter semantics of <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>.</p>
 </div>
-<section id="imports">
-<h2>Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfwarp</span>
@@ -437,112 +459,128 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfwarp</span>
 
-<span class="c1"># 1) Load and compile a MuJoCo model</span>
+<span class="c1"># 1) Load and compile a MuJoCo model, then allocate host-side runtime state</span>
 <span class="n">model_path</span> <span class="o">=</span> <span class="s2">&quot;path/to/your/model.xml&quot;</span>
 <span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 <span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
 <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
 
-<span class="c1"># 2) Move model/data into ComFree Warp</span>
+<span class="c1"># 2) Move the model and data onto device</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
     <span class="n">mjm</span><span class="p">,</span>
-    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
 
-<span class="c1"># 3) Warm up and capture a graph for fast repeated stepping</span>
+<span class="c1"># 3) Warm up once, then capture a Warp graph for repeated stepping</span>
 <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">wp</span><span class="o">.</span><span class="n">ScopedCapture</span><span class="p">()</span> <span class="k">as</span> <span class="n">capture</span><span class="p">:</span>
     <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">capture</span><span class="o">.</span><span class="n">graph</span>
 
-<span class="c1"># 4) Run simulation steps and sync back to MuJoCo data if needed</span>
+<span class="c1"># 4) Launch the graph and pull one world back into MuJoCo when needed</span>
 <span class="k">for</span> <span class="n">step_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
     <span class="n">wp</span><span class="o">.</span><span class="n">capture_launch</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
     <span class="n">wp</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
-    <span class="n">cfwarp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="n">cfwarp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">world_id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step_idx</span><span class="si">}</span><span class="s2">: qpos = </span><span class="si">{</span><span class="n">d</span><span class="o">.</span><span class="n">qpos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step_idx</span><span class="si">}</span><span class="s2">: qpos = </span><span class="si">{</span><span class="n">mjd</span><span class="o">.</span><span class="n">qpos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="core-apis">
-<h2>Core APIs<a class="headerlink" href="#core-apis" title="Link to this heading">#</a></h2>
-<section id="put-model-mjspec-comfree-stiffness-0-1-comfree-damping-0-001">
-<h3><code class="docutils literal notranslate"><span class="pre">put_model(mjspec,</span> <span class="pre">comfree_stiffness=0.1,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code><a class="headerlink" href="#put-model-mjspec-comfree-stiffness-0-1-comfree-damping-0-001" title="Link to this heading">#</a></h3>
-<p>Converts a compiled MuJoCo model into a ComFree Warp model.</p>
-<p>Parameters:</p>
+<section id="what-changes-relative-to-mjwarp">
+<h2>What Changes Relative to MJWarp<a class="headerlink" href="#what-changes-relative-to-mjwarp" title="Link to this heading">#</a></h2>
+<p>From the current <code class="docutils literal notranslate"><span class="pre">api.py</span></code> implementation, the main ComFree-specific additions are:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">mjspec</span></code>: compiled MuJoCo model specification</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code>: ComFree contact stiffness, default <code class="docutils literal notranslate"><span class="pre">0.1</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>: ComFree contact damping, default <code class="docutils literal notranslate"><span class="pre">0.001</span></code></p></li>
-<li><p>any additional arguments supported by the underlying MJWarp conversion path</p></li>
-</ul>
-<p>For the detailed meaning of <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>, including per-environment parameter usage, see <a class="reference internal" href="cfwarp-params.html"><span class="std std-doc">Per-Env Parameter Parallelization</span></a>.</p>
-<p>Returns:</p>
-<ul class="simple">
-<li><p>a Warp-side model with ComFree parameters attached</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> attaches <code class="docutils literal notranslate"><span class="pre">m.comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">m.comfree_damping</span></code> as device arrays</p></li>
+<li><p>scalar or vector inputs are both accepted; internally they are converted with <code class="docutils literal notranslate"><span class="pre">np.atleast_1d(...)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">put_data(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">make_data(...)</span></code> ensure extra ComFree device fields exist</p></li>
+<li><p>the additional ComFree buffers include <code class="docutils literal notranslate"><span class="pre">d.efc.efc_dist</span></code>, <code class="docutils literal notranslate"><span class="pre">d.efc.efc_mass</span></code>, <code class="docutils literal notranslate"><span class="pre">d.qvel_smooth_pred</span></code>, and <code class="docutils literal notranslate"><span class="pre">d.qfrc_total</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> runs the ComFree forward pipeline, including ComFree constraint construction and ComFree force assembly</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step(...)</span></code> runs the ComFree step pipeline and then integrates with the selected MJWarp integrator path</p></li>
 </ul>
 </section>
-<section id="put-data-mjspec-mjdata-nworld-1-nconmax-1000-njmax-5000">
-<h3><code class="docutils literal notranslate"><span class="pre">put_data(mjspec,</span> <span class="pre">mjdata,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code><a class="headerlink" href="#put-data-mjspec-mjdata-nworld-1-nconmax-1000-njmax-5000" title="Link to this heading">#</a></h3>
-<p>Converts MuJoCo runtime data into a ComFree Warp data object.</p>
-<p>Parameters:</p>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
+<section id="put-model-mjm-comfree-stiffness-0-2-comfree-damping-0-001">
+<h3><code class="docutils literal notranslate"><span class="pre">put_model(mjm,</span> <span class="pre">comfree_stiffness=0.2,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code><a class="headerlink" href="#put-model-mjm-comfree-stiffness-0-2-comfree-damping-0-001" title="Link to this heading">#</a></h3>
+<p>Creates a device-side model from a host-side <code class="docutils literal notranslate"><span class="pre">mujoco.MjModel</span></code>, then attaches the ComFree contact parameters.</p>
+<p>In the current source:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">mjspec</span></code>: MuJoCo model specification</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mjdata</span></code>: MuJoCo data object</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">nworld</span></code>: number of simulation worlds</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">nconmax</span></code>: maximum number of contacts</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">njmax</span></code>: maximum number of constraints</p></li>
-</ul>
-<p>Returns:</p>
-<ul class="simple">
-<li><p>a Warp-side data object extended with ComFree solver fields</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">0.001</span></code></p></li>
+<li><p>both are stored on device as Warp arrays</p></li>
+<li><p>the underlying model conversion is still performed by vendored <code class="docutils literal notranslate"><span class="pre">mujoco_warp.put_model(...)</span></code></p></li>
 </ul>
 </section>
-<section id="make-data-mjspec-nworld-1-nconmax-1000-njmax-5000">
-<h3><code class="docutils literal notranslate"><span class="pre">make_data(mjspec,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code><a class="headerlink" href="#make-data-mjspec-nworld-1-nconmax-1000-njmax-5000" title="Link to this heading">#</a></h3>
-<p>Creates a new ComFree Warp data object without converting an existing <code class="docutils literal notranslate"><span class="pre">mjdata</span></code>.</p>
+<section id="put-data-mjm-mjd-nworld-1-nconmax-none-nccdmax-none-njmax-none-naconmax-none-naccdmax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">put_data(mjm,</span> <span class="pre">mjd,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=None,</span> <span class="pre">nccdmax=None,</span> <span class="pre">njmax=None,</span> <span class="pre">naconmax=None,</span> <span class="pre">naccdmax=None)</span></code><a class="headerlink" href="#put-data-mjm-mjd-nworld-1-nconmax-none-nccdmax-none-njmax-none-naconmax-none-naccdmax-none" title="Link to this heading">#</a></h3>
+<p>Creates a device-side <code class="docutils literal notranslate"><span class="pre">Data</span></code> object from host-side <code class="docutils literal notranslate"><span class="pre">mujoco.MjData</span></code>, using the vendored MJWarp allocation path and then adding ComFree-specific buffers.</p>
+<p>This is the right entry point when you already have a host-side <code class="docutils literal notranslate"><span class="pre">MjData</span></code> whose state you want to copy onto device.</p>
 </section>
-<section id="get-data-into-mjdata-mjspec-warp-data">
-<h3><code class="docutils literal notranslate"><span class="pre">get_data_into(mjdata,</span> <span class="pre">mjspec,</span> <span class="pre">warp_data)</span></code><a class="headerlink" href="#get-data-into-mjdata-mjspec-warp-data" title="Link to this heading">#</a></h3>
-<p>Copies Warp-side simulation state back into MuJoCo CPU arrays.</p>
-<p>Use this when you need to inspect state through MuJoCo-side tools or code.</p>
+<section id="make-data-mjm-nworld-1-nconmax-none-nccdmax-none-njmax-none-naconmax-none-naccdmax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">make_data(mjm,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=None,</span> <span class="pre">nccdmax=None,</span> <span class="pre">njmax=None,</span> <span class="pre">naconmax=None,</span> <span class="pre">naccdmax=None)</span></code><a class="headerlink" href="#make-data-mjm-nworld-1-nconmax-none-nccdmax-none-njmax-none-naconmax-none-naccdmax-none" title="Link to this heading">#</a></h3>
+<p>Allocates a new device-side <code class="docutils literal notranslate"><span class="pre">Data</span></code> object without copying an existing host-side <code class="docutils literal notranslate"><span class="pre">MjData</span></code>.</p>
+<p>Use this when you want batched or freshly initialized device-side state.</p>
 </section>
-<section id="reset-data-mjspec-warp-data">
-<h3><code class="docutils literal notranslate"><span class="pre">reset_data(mjspec,</span> <span class="pre">warp_data)</span></code><a class="headerlink" href="#reset-data-mjspec-warp-data" title="Link to this heading">#</a></h3>
-<p>Resets the simulation state.</p>
+<section id="get-data-into-result-mjm-d-world-id-0">
+<h3><code class="docutils literal notranslate"><span class="pre">get_data_into(result,</span> <span class="pre">mjm,</span> <span class="pre">d,</span> <span class="pre">world_id=0)</span></code><a class="headerlink" href="#get-data-into-result-mjm-d-world-id-0" title="Link to this heading">#</a></h3>
+<p>Copies one selected world from device back into an existing host-side <code class="docutils literal notranslate"><span class="pre">mujoco.MjData</span></code>.</p>
+<p>This function updates the provided <code class="docutils literal notranslate"><span class="pre">result</span></code> object in place. It is primarily useful for:</p>
+<ul class="simple">
+<li><p>debugging</p></li>
+<li><p>logging</p></li>
+<li><p>visualization</p></li>
+<li><p>interoperability with MuJoCo-side tools</p></li>
+</ul>
 </section>
-<section id="step-model-data">
-<h3><code class="docutils literal notranslate"><span class="pre">step(model,</span> <span class="pre">data)</span></code><a class="headerlink" href="#step-model-data" title="Link to this heading">#</a></h3>
+<section id="reset-data-m-d-reset-none">
+<h3><code class="docutils literal notranslate"><span class="pre">reset_data(m,</span> <span class="pre">d,</span> <span class="pre">reset=None)</span></code><a class="headerlink" href="#reset-data-m-d-reset-none" title="Link to this heading">#</a></h3>
+<p>Resets device-side data to defaults. The optional <code class="docutils literal notranslate"><span class="pre">reset</span></code> argument is a per-world boolean mask.</p>
+</section>
+<section id="forward-m-d-factorize-true">
+<h3><code class="docutils literal notranslate"><span class="pre">forward(m,</span> <span class="pre">d,</span> <span class="pre">factorize=True)</span></code><a class="headerlink" href="#forward-m-d-factorize-true" title="Link to this heading">#</a></h3>
+<p>Runs the ComFree forward pipeline without integrating one time step.</p>
+<p>From the current source, this path performs:</p>
+<ul class="simple">
+<li><p>kinematics and smooth dynamics setup</p></li>
+<li><p>collision detection</p></li>
+<li><p>ComFree constraint construction</p></li>
+<li><p>smooth acceleration computation</p></li>
+<li><p>ComFree constraint-force assembly</p></li>
+<li><p>acceleration solve</p></li>
+</ul>
+</section>
+<section id="step-m-d">
+<h3><code class="docutils literal notranslate"><span class="pre">step(m,</span> <span class="pre">d)</span></code><a class="headerlink" href="#step-m-d" title="Link to this heading">#</a></h3>
 <p>Runs one ComFree simulation step.</p>
-<p>This is one of the main places where <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> differs internally from <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>: the call looks the same, but it executes the ComFree solver pipeline.</p>
+<p>In the current implementation, <code class="docutils literal notranslate"><span class="pre">step(...)</span></code> calls <code class="docutils literal notranslate"><span class="pre">forward_comfree(...)</span></code> and then integrates using the device-side integrator selected in the model options.</p>
+<p>At present, the ComFree step implementation supports:</p>
+<ul class="simple">
+<li><p>Euler integration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IMPLICITFAST</span></code></p></li>
+</ul>
+<p>Other integrator modes are not documented here as supported by the current ComFree step path.</p>
 </section>
-<section id="forward-model-data">
-<h3><code class="docutils literal notranslate"><span class="pre">forward(model,</span> <span class="pre">data)</span></code><a class="headerlink" href="#forward-model-data" title="Link to this heading">#</a></h3>
-<p>Runs the ComFree forward pipeline without integration.</p>
 </section>
-</section>
-<section id="batch-example">
-<h2>Batch Example<a class="headerlink" href="#batch-example" title="Link to this heading">#</a></h2>
+<section id="multi-world-example">
+<h2>Multi-World Example<a class="headerlink" href="#multi-world-example" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfwarp</span>
 
 <span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;model.xml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
-<span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
 
 <span class="n">m</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
     <span class="n">mjm</span><span class="p">,</span>
-    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-    <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+    <span class="n">comfree_damping</span><span class="o">=</span><span class="p">[</span><span class="mf">0.002</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">],</span>
 <span class="p">)</span>
 
-<span class="n">nworlds</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">make_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="n">nworlds</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">nworld</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">cfwarp</span><span class="o">.</span><span class="n">make_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="n">nworld</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 
 <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
@@ -550,27 +588,25 @@ document.write(`
     <span class="n">cfwarp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">capture</span><span class="o">.</span><span class="n">graph</span>
 
+<span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">step_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">):</span>
     <span class="n">wp</span><span class="o">.</span><span class="n">capture_launch</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
     <span class="n">wp</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">step_idx</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">cfwarp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step_idx</span><span class="si">}</span><span class="s2">: &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;min_qpos=</span><span class="si">{</span><span class="n">d</span><span class="o">.</span><span class="n">qpos</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;max_qpos=</span><span class="si">{</span><span class="n">d</span><span class="o">.</span><span class="n">qpos</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+        <span class="n">cfwarp</span><span class="o">.</span><span class="n">get_data_into</span><span class="p">(</span><span class="n">mjd</span><span class="p">,</span> <span class="n">mjm</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">world_id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step_idx</span><span class="si">}</span><span class="s2">: qpos0 = </span><span class="si">{</span><span class="n">mjd</span><span class="o">.</span><span class="n">qpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
+<section id="practical-notes">
+<h2>Practical Notes<a class="headerlink" href="#practical-notes" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> are the main ComFree-specific additions compared with plain MJWarp.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> keep the same role as in MJWarp, but run the ComFree solver and forward pipeline internally.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">get_data_into()</span></code> is useful, but CPU-GPU synchronization is relatively expensive, so use it only when needed.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">wp.ScopedCapture()</span></code> is recommended when you plan to repeat the same simulation step many times.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> uses vendored <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> for most model/data conversion and many unchanged helper APIs.</p></li>
+<li><p>The main user-facing extensions are <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> on <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nworld</span></code>, <code class="docutils literal notranslate"><span class="pre">nconmax</span></code>, <code class="docutils literal notranslate"><span class="pre">njmax</span></code>, <code class="docutils literal notranslate"><span class="pre">naconmax</span></code>, and related allocation parameters follow the same basic semantics as MJWarp.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code> introduces host-device synchronization, so avoid calling it every step unless you actually need host-side access.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wp.ScopedCapture()</span></code> is useful when you plan to repeat the same step graph many times.</p></li>
 </ul>
 </section>
 </section>
@@ -619,7 +655,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ComFree Contact Parameter Settings</p>
+        <p class="prev-next-title">ComFree Contact Parameters</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -639,20 +675,22 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-overview">Workflow Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-example">Minimal Example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-apis">Core APIs</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model-mjspec-comfree-stiffness-0-1-comfree-damping-0-001"><code class="docutils literal notranslate"><span class="pre">put_model(mjspec,</span> <span class="pre">comfree_stiffness=0.1,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-mjspec-mjdata-nworld-1-nconmax-1000-njmax-5000"><code class="docutils literal notranslate"><span class="pre">put_data(mjspec,</span> <span class="pre">mjdata,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-data-mjspec-nworld-1-nconmax-1000-njmax-5000"><code class="docutils literal notranslate"><span class="pre">make_data(mjspec,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=1000,</span> <span class="pre">njmax=5000,</span> <span class="pre">...)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-data-into-mjdata-mjspec-warp-data"><code class="docutils literal notranslate"><span class="pre">get_data_into(mjdata,</span> <span class="pre">mjspec,</span> <span class="pre">warp_data)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data-mjspec-warp-data"><code class="docutils literal notranslate"><span class="pre">reset_data(mjspec,</span> <span class="pre">warp_data)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-model-data"><code class="docutils literal notranslate"><span class="pre">step(model,</span> <span class="pre">data)</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-model-data"><code class="docutils literal notranslate"><span class="pre">forward(model,</span> <span class="pre">data)</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changes-relative-to-mjwarp">What Changes Relative to MJWarp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api-reference">API Reference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model-mjm-comfree-stiffness-0-2-comfree-damping-0-001"><code class="docutils literal notranslate"><span class="pre">put_model(mjm,</span> <span class="pre">comfree_stiffness=0.2,</span> <span class="pre">comfree_damping=0.001,</span> <span class="pre">...)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-data-mjm-mjd-nworld-1-nconmax-none-nccdmax-none-njmax-none-naconmax-none-naccdmax-none"><code class="docutils literal notranslate"><span class="pre">put_data(mjm,</span> <span class="pre">mjd,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=None,</span> <span class="pre">nccdmax=None,</span> <span class="pre">njmax=None,</span> <span class="pre">naconmax=None,</span> <span class="pre">naccdmax=None)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-data-mjm-nworld-1-nconmax-none-nccdmax-none-njmax-none-naconmax-none-naccdmax-none"><code class="docutils literal notranslate"><span class="pre">make_data(mjm,</span> <span class="pre">nworld=1,</span> <span class="pre">nconmax=None,</span> <span class="pre">nccdmax=None,</span> <span class="pre">njmax=None,</span> <span class="pre">naconmax=None,</span> <span class="pre">naccdmax=None)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-data-into-result-mjm-d-world-id-0"><code class="docutils literal notranslate"><span class="pre">get_data_into(result,</span> <span class="pre">mjm,</span> <span class="pre">d,</span> <span class="pre">world_id=0)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-data-m-d-reset-none"><code class="docutils literal notranslate"><span class="pre">reset_data(m,</span> <span class="pre">d,</span> <span class="pre">reset=None)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-m-d-factorize-true"><code class="docutils literal notranslate"><span class="pre">forward(m,</span> <span class="pre">d,</span> <span class="pre">factorize=True)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-m-d"><code class="docutils literal notranslate"><span class="pre">step(m,</span> <span class="pre">d)</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-example">Batch Example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-world-example">Multi-World Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-notes">Practical Notes</a></li>
 </ul>
   </nav></div>
 
@@ -674,13 +712,6 @@ By ASU IRIS Lab
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

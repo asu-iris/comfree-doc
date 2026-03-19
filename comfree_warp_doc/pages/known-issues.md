@@ -1,106 +1,54 @@
 # Known Issues
 
-> **See also:** [ComFree Jax known issues](comfree-jax-known-issues)
->
-This page collects practical limitations and caveats that users should keep in mind when working with `comfree_warp`.
+This page focuses on the main practical caveats users should keep in mind when working with `comfree_warp`.
 
-The goal here is not to list every internal TODO in the source tree, but to document the issues that are most useful from a user perspective.
+## 1. Large Initial Penetration Can Still Be Sensitive
 
-## 1. `put_model(...)` is the main user-visible API extension
+Large initial interpenetration can still lead to sensitive or abrupt contact behavior, especially at the beginning of a rollout. The main reason is that deep initial penetration can generate very large contact forces in the first few simulation steps, which can in turn produce visible jumps or abrupt corrections.
 
-Compared with plain `mujoco_warp`, the main API-level extension most users will notice is that `comfree_warp.put_model(...)` adds:
+In practice:
 
-- `comfree_stiffness`
-- `comfree_damping`
+- avoid deeply intersecting initial configurations when possible
+- if a body appears to "pop out" or jump strongly at startup, large initial penetration is one of the first things to inspect
 
-If these are omitted, defaults are used. If results are unexpectedly soft, stiff, or bouncy, this is one of the first places to check.
+Cleaner initial contact states usually lead to more predictable behavior.
 
-## 2. `step(...)` and `forward(...)` keep the same interface but not the same implementation
+## 2. Most Non-Solver Issues Are Inherited from MJWarp
 
-`comfree_warp.step(...)` and `comfree_warp.forward(...)` use the ComFree solver path, not the original MJWarp solver path.
+`comfree_warp` changes the solver path, but much of the surrounding simulation stack is still inherited from vendored `mujoco_warp`. This means that many non-solver issues are likely to come from `mujoco_warp`, not from the ComFree solver itself. A typical example is collision detection.
 
-In practice, this means:
+More generally, behaviors related to geometry processing, contact generation, broadphase, narrowphase, rendering, and other non-solver infrastructure may still reflect MJWarp behavior.
 
-- the function names and overall usage stay familiar
-- the simulation behavior is not expected to be numerically identical to MJWarp
+For MJWarp-related issues, limitations, or upstream fixes, refer to the official repository:
 
-If you are comparing results between the two backends, differences in trajectories or contact behavior are not necessarily a bug by themselves.
+- [google-deepmind/mujoco_warp](https://github.com/google-deepmind/mujoco_warp)
 
-## 3. Large initial penetration can still be sensitive
+As a rule of thumb:
 
-The ComFree constraint implementation contains logic specifically intended to reduce significant jumps when the initial penetration is large.
+- if the issue is not obviously solver-related, it is often inherited from `mujoco_warp`
+- `comfree_warp` periodically pulls upstream MJWarp changes to update the vendored `mujoco_warp` version
 
-This suggests an important practical caution:
+## 3. Very Small Dynamics Drift Can Occur
 
-- large initial interpenetration is still a case worth avoiding when possible
-- if you see abrupt contact responses at the beginning of a rollout, check the initial geometry configuration first
+Because ComFree uses an impedance-style contact handling mechanism rather than a complementarity or optimization-complete solver,  very small dynamics drift can occur in some cases. This should be treated as an expected tradeoff of the complementarity-free formulation rather than as an automatic sign of a bug.
 
-In general, cleaner initial contact states lead to more predictable behavior.
+This can potentially be fixed or further reduced in future development.
 
-## 4. CPU-GPU synchronization can become a bottleneck
 
-Calls such as `get_data_into(...)` copy Warp-side state back to MuJoCo CPU arrays.
 
-This is useful for debugging, logging, or visualization, but it can be expensive if done every step.
+## 4. Step Size Requires More Care Than in MJWarp
 
-Recommendation:
+In our experience, `comfree_warp` does not support time steps as large as MJWarp in all cases, although it can still handle reasonably large step sizes. This is because  impedance-style contact response is using the timestep to do penetration prediction. As the time step changes, the effective contact behavior changes as well, so the same stiffness and damping values may no longer produce the same simulation quality.
 
-- keep simulation on the GPU as much as possible
-- call `get_data_into(...)` only when you actually need MuJoCo-side access
+In practice:
 
-## 5. Multi-world parameter vectors require careful interpretation
+- if you increase the simulation time step significantly, re-tune `comfree_stiffness` and `comfree_damping`
+- if behavior becomes unstable or overly soft after changing the time step, check contact tuning before assuming a deeper issue
 
-When `comfree_stiffness` or `comfree_damping` are passed as vectors, they are assigned to worlds by bucket rather than by arbitrary lookup.
+## Practical Guidance
 
-Recommendation:
+If results look off, check these first:
 
-- read [ComFree Contact Parameter Settings](cfwarp-params.md) carefully before using vector-valued settings
-- be explicit about whether you want one shared value, periodic reuse, or one value per world
-
-## 6. Compatibility with external dependencies depends on versions
-
-The current source includes compatibility logic around:
-
-- `warp-lang >= 1.12`
-- `mujoco == 3.5.0`
-
-MuJoCo internal data structure updates across versions may introduce compatibility issues in `comfree_warp`.
-
-This means older or newer dependency versions may require extra caution.
-
-We plan to continue adding fixes so that future MuJoCo versions are better supported.
-
-If something behaves unexpectedly at import time or during setup, verify the MuJoCo and Warp versions first.
-
-## 7. Not every internal MJWarp API is the focus of ComFree documentation
-
-`comfree_warp` re-exports a large amount of API surface from MJWarp, but the ComFree docs focus mainly on the engine-facing workflow:
-
-- `put_model`
-- `put_data`
-- `make_data`
-- `get_data_into`
-- `reset_data`
-- `step`
-- `forward`
-
-If you are using deeper MJWarp helper APIs, the interface may still be available, but the ComFree docs may not cover those paths in detail.
-
-## 8. Solver differences affect some MuJoCo XML constraint settings
-
-Because ComFree uses a different constraint solver than MuJoCo's built-in solver, some constraint-based configuration specified directly in MuJoCo XML (for example `joint` attributes such as `frictionloss`) may not have the same effect in `comfree_warp`. We will continue improving coverage of these XML parameters; if you rely on solver-specific settings, please verify behavior and report any regressions.
-
-## 9. Torsional and rolling friction coefficient scaling may differ from MuJoCo
-
-The scale (magnitude) of torsional and rolling friction coefficients can differ between `comfree_warp` and MuJoCo. These coefficients may require fine-tuning before deployment to achieve behavior that matches MuJoCo.
-
-## Practical Advice
-
-If something seems wrong, check these first:
-
-1. Are `comfree_stiffness` and `comfree_damping` set to sensible values?
-2. Is the model starting with large penetration?
-3. Are you calling `get_data_into(...)` more often than necessary?
-4. Are your MuJoCo and Warp versions compatible with the current codebase?
-
-These four checks will explain a large fraction of practical issues encountered in early usage.
+1. Is the model starting with large initial penetration?
+2. Is the issue solver-related, or is it more likely inherited from `mujoco_warp`?
+4. Have you re-tuned `comfree_stiffness` and `comfree_damping`?

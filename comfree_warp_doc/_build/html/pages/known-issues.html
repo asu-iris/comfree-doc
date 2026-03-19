@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'pages/known-issues';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="How ComFree Warp Differs from MuJoCo Warp" href="difference.html" />
+    <link rel="prev" title="Headless Simulation and Streaming" href="headless-streaming.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -178,13 +178,23 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
-<ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mjwarp-usage.html">MJWarp Preliminary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using ComFree Warp</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cfwarp-usage.html">ComFree Warp Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameter Settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cfwarp-params.html">ComFree Contact Parameters</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MJWarp</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="headless-streaming.html">Headless Simulation and Streaming</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Known Issues</a></li>
 </ul>
 
@@ -381,14 +391,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model-is-the-main-user-visible-api-extension">1. <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> is the main user-visible API extension</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-and-forward-keep-the-same-interface-but-not-the-same-implementation">2. <code class="docutils literal notranslate"><span class="pre">step(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> keep the same interface but not the same implementation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#large-initial-penetration-can-still-be-sensitive">3. Large initial penetration can still be sensitive</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cpu-gpu-synchronization-can-become-a-bottleneck">4. CPU-GPU synchronization can become a bottleneck</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-world-parameter-vectors-require-careful-interpretation">5. Multi-world parameter vectors require careful interpretation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility-with-external-dependencies-depends-on-versions">6. Compatibility with external dependencies depends on versions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#not-every-internal-mjwarp-api-is-the-focus-of-comfree-documentation">7. Not every internal MJWarp API is the focus of ComFree documentation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-advice">Practical Advice</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#large-initial-penetration-can-still-be-sensitive">1. Large Initial Penetration Can Still Be Sensitive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#most-non-solver-issues-are-inherited-from-mjwarp">2. Most Non-Solver Issues Are Inherited from MJWarp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#very-small-dynamics-drift-can-occur">3. Very Small Dynamics Drift Can Occur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-size-requires-more-care-than-in-mjwarp">4. Step Size Requires More Care Than in MJWarp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-guidance">Practical Guidance</a></li>
 </ul>
             </nav>
         </div>
@@ -402,90 +409,53 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="known-issues">
 <h1>Known Issues<a class="headerlink" href="#known-issues" title="Link to this heading">#</a></h1>
-<p>This page collects practical limitations and caveats that users should keep in mind when working with <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code>.</p>
-<p>The goal here is not to list every internal TODO in the source tree, but to document the issues that are most useful from a user perspective.</p>
-<section id="put-model-is-the-main-user-visible-api-extension">
-<h2>1. <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> is the main user-visible API extension<a class="headerlink" href="#put-model-is-the-main-user-visible-api-extension" title="Link to this heading">#</a></h2>
-<p>Compared with plain <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, the main API-level extension most users will notice is that <code class="docutils literal notranslate"><span class="pre">comfree_warp.put_model(...)</span></code> adds:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></p></li>
-</ul>
-<p>If these are omitted, defaults are used. If results are unexpectedly soft, stiff, or bouncy, this is one of the first places to check.</p>
-</section>
-<section id="step-and-forward-keep-the-same-interface-but-not-the-same-implementation">
-<h2>2. <code class="docutils literal notranslate"><span class="pre">step(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> keep the same interface but not the same implementation<a class="headerlink" href="#step-and-forward-keep-the-same-interface-but-not-the-same-implementation" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_warp.step(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_warp.forward(...)</span></code> use the ComFree solver path, not the original MJWarp solver path.</p>
-<p>In practice, this means:</p>
-<ul class="simple">
-<li><p>the function names and overall usage stay familiar</p></li>
-<li><p>the simulation behavior is not expected to be numerically identical to MJWarp</p></li>
-</ul>
-<p>If you are comparing results between the two backends, differences in trajectories or contact behavior are not necessarily a bug by themselves.</p>
-</section>
+<p>This page focuses on the main practical caveats users should keep in mind when working with <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code>.</p>
 <section id="large-initial-penetration-can-still-be-sensitive">
-<h2>3. Large initial penetration can still be sensitive<a class="headerlink" href="#large-initial-penetration-can-still-be-sensitive" title="Link to this heading">#</a></h2>
-<p>The ComFree constraint implementation contains logic specifically intended to reduce significant jumps when the initial penetration is large.</p>
-<p>This suggests an important practical caution:</p>
+<h2>1. Large Initial Penetration Can Still Be Sensitive<a class="headerlink" href="#large-initial-penetration-can-still-be-sensitive" title="Link to this heading">#</a></h2>
+<p>Large initial interpenetration can still lead to sensitive or abrupt contact behavior, especially at the beginning of a rollout. The main reason is that deep initial penetration can generate very large contact forces in the first few simulation steps, which can in turn produce visible jumps or abrupt corrections.</p>
+<p>In practice:</p>
 <ul class="simple">
-<li><p>large initial interpenetration is still a case worth avoiding when possible</p></li>
-<li><p>if you see abrupt contact responses at the beginning of a rollout, check the initial geometry configuration first</p></li>
+<li><p>avoid deeply intersecting initial configurations when possible</p></li>
+<li><p>if a body appears to “pop out” or jump strongly at startup, large initial penetration is one of the first things to inspect</p></li>
 </ul>
-<p>In general, cleaner initial contact states lead to more predictable behavior.</p>
+<p>Cleaner initial contact states usually lead to more predictable behavior.</p>
 </section>
-<section id="cpu-gpu-synchronization-can-become-a-bottleneck">
-<h2>4. CPU-GPU synchronization can become a bottleneck<a class="headerlink" href="#cpu-gpu-synchronization-can-become-a-bottleneck" title="Link to this heading">#</a></h2>
-<p>Calls such as <code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code> copy Warp-side state back to MuJoCo CPU arrays.</p>
-<p>This is useful for debugging, logging, or visualization, but it can be expensive if done every step.</p>
-<p>Recommendation:</p>
+<section id="most-non-solver-issues-are-inherited-from-mjwarp">
+<h2>2. Most Non-Solver Issues Are Inherited from MJWarp<a class="headerlink" href="#most-non-solver-issues-are-inherited-from-mjwarp" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> changes the solver path, but much of the surrounding simulation stack is still inherited from vendored <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>. This means that many non-solver issues are likely to come from <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>, not from the ComFree solver itself. A typical example is collision detection.</p>
+<p>More generally, behaviors related to geometry processing, contact generation, broadphase, narrowphase, rendering, and other non-solver infrastructure may still reflect MJWarp behavior.</p>
+<p>For MJWarp-related issues, limitations, or upstream fixes, refer to the official repository:</p>
 <ul class="simple">
-<li><p>keep simulation on the GPU as much as possible</p></li>
-<li><p>call <code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code> only when you actually need MuJoCo-side access</p></li>
+<li><p><a class="reference external" href="https://github.com/google-deepmind/mujoco_warp">google-deepmind/mujoco_warp</a></p></li>
 </ul>
-</section>
-<section id="multi-world-parameter-vectors-require-careful-interpretation">
-<h2>5. Multi-world parameter vectors require careful interpretation<a class="headerlink" href="#multi-world-parameter-vectors-require-careful-interpretation" title="Link to this heading">#</a></h2>
-<p>When <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> or <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> are passed as vectors, they are assigned to worlds by bucket rather than by arbitrary lookup.</p>
-<p>Recommendation:</p>
+<p>As a rule of thumb:</p>
 <ul class="simple">
-<li><p>read <a class="reference internal" href="cfwarp-params.html"><span class="std std-doc">ComFree Contact Parameter Settings</span></a> carefully before using vector-valued settings</p></li>
-<li><p>be explicit about whether you want one shared value, periodic reuse, or one value per world</p></li>
+<li><p>if the issue is not obviously solver-related, it is often inherited from <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> periodically pulls upstream MJWarp changes to update the vendored <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code> version</p></li>
 </ul>
 </section>
-<section id="compatibility-with-external-dependencies-depends-on-versions">
-<h2>6. Compatibility with external dependencies depends on versions<a class="headerlink" href="#compatibility-with-external-dependencies-depends-on-versions" title="Link to this heading">#</a></h2>
-<p>The current source includes compatibility logic around:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">warp-lang</span> <span class="pre">&gt;=</span> <span class="pre">1.12</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mujoco</span> <span class="pre">&gt;</span> <span class="pre">3.4.0</span></code></p></li>
-</ul>
-<p>This means older dependency versions may require extra caution.</p>
-<p>If something behaves unexpectedly at import time or during setup, verify the MuJoCo and Warp versions first.</p>
+<section id="very-small-dynamics-drift-can-occur">
+<h2>3. Very Small Dynamics Drift Can Occur<a class="headerlink" href="#very-small-dynamics-drift-can-occur" title="Link to this heading">#</a></h2>
+<p>Because ComFree uses an impedance-style contact handling mechanism rather than a complementarity or optimization-complete solver,  very small dynamics drift can occur in some cases. This should be treated as an expected tradeoff of the complementarity-free formulation rather than as an automatic sign of a bug.</p>
+<p>This can potentially be fixed or further reduced in future development.</p>
 </section>
-<section id="not-every-internal-mjwarp-api-is-the-focus-of-comfree-documentation">
-<h2>7. Not every internal MJWarp API is the focus of ComFree documentation<a class="headerlink" href="#not-every-internal-mjwarp-api-is-the-focus-of-comfree-documentation" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> re-exports a large amount of API surface from MJWarp, but the ComFree docs focus mainly on the engine-facing workflow:</p>
+<section id="step-size-requires-more-care-than-in-mjwarp">
+<h2>4. Step Size Requires More Care Than in MJWarp<a class="headerlink" href="#step-size-requires-more-care-than-in-mjwarp" title="Link to this heading">#</a></h2>
+<p>In our experience, <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> does not support time steps as large as MJWarp in all cases, although it can still handle reasonably large step sizes. This is because  impedance-style contact response is using the timestep to do penetration prediction. As the time step changes, the effective contact behavior changes as well, so the same stiffness and damping values may no longer produce the same simulation quality.</p>
+<p>In practice:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">put_model</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">put_data</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">make_data</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">get_data_into</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">reset_data</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">forward</span></code></p></li>
+<li><p>if you increase the simulation time step significantly, re-tune <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></p></li>
+<li><p>if behavior becomes unstable or overly soft after changing the time step, check contact tuning before assuming a deeper issue</p></li>
 </ul>
-<p>If you are using deeper MJWarp helper APIs, the interface may still be available, but the ComFree docs may not cover those paths in detail.</p>
 </section>
-<section id="practical-advice">
-<h2>Practical Advice<a class="headerlink" href="#practical-advice" title="Link to this heading">#</a></h2>
-<p>If something seems wrong, check these first:</p>
+<section id="practical-guidance">
+<h2>Practical Guidance<a class="headerlink" href="#practical-guidance" title="Link to this heading">#</a></h2>
+<p>If results look off, check these first:</p>
 <ol class="arabic simple">
-<li><p>Are <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> set to sensible values?</p></li>
-<li><p>Is the model starting with large penetration?</p></li>
-<li><p>Are you calling <code class="docutils literal notranslate"><span class="pre">get_data_into(...)</span></code> more often than necessary?</p></li>
-<li><p>Are your MuJoCo and Warp versions compatible with the current codebase?</p></li>
+<li><p>Is the model starting with large initial penetration?</p></li>
+<li><p>Is the issue solver-related, or is it more likely inherited from <code class="docutils literal notranslate"><span class="pre">mujoco_warp</span></code>?</p></li>
+<li><p>Have you re-tuned <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>?</p></li>
 </ol>
-<p>These four checks will explain a large fraction of practical issues encountered in early usage.</p>
 </section>
 </section>
 
@@ -520,12 +490,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="difference.html"
+       href="headless-streaming.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How ComFree Warp Differs from MuJoCo Warp</p>
+        <p class="prev-next-title">Headless Simulation and Streaming</p>
       </div>
     </a>
 </div>
@@ -544,14 +514,11 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#put-model-is-the-main-user-visible-api-extension">1. <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code> is the main user-visible API extension</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-and-forward-keep-the-same-interface-but-not-the-same-implementation">2. <code class="docutils literal notranslate"><span class="pre">step(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> keep the same interface but not the same implementation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#large-initial-penetration-can-still-be-sensitive">3. Large initial penetration can still be sensitive</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cpu-gpu-synchronization-can-become-a-bottleneck">4. CPU-GPU synchronization can become a bottleneck</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-world-parameter-vectors-require-careful-interpretation">5. Multi-world parameter vectors require careful interpretation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility-with-external-dependencies-depends-on-versions">6. Compatibility with external dependencies depends on versions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#not-every-internal-mjwarp-api-is-the-focus-of-comfree-documentation">7. Not every internal MJWarp API is the focus of ComFree documentation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-advice">Practical Advice</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#large-initial-penetration-can-still-be-sensitive">1. Large Initial Penetration Can Still Be Sensitive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#most-non-solver-issues-are-inherited-from-mjwarp">2. Most Non-Solver Issues Are Inherited from MJWarp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#very-small-dynamics-drift-can-occur">3. Very Small Dynamics Drift Can Occur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-size-requires-more-care-than-in-mjwarp">4. Step Size Requires More Care Than in MJWarp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-guidance">Practical Guidance</a></li>
 </ul>
   </nav></div>
 
@@ -573,13 +540,6 @@ By ASU IRIS Lab
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

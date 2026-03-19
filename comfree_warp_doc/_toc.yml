@@ -4,20 +4,18 @@
 format: jb-book
 root: intro
 parts:
-- caption: ComFree Warp
+- caption: Getting Started
   chapters:
   - file: pages/installation
   - file: pages/mjwarp-usage
+- caption: Using ComFree Warp
+  chapters:
   - file: pages/cfwarp-usage
   - file: pages/cfwarp-params
+- caption: Concepts and Comparison
+  chapters:
   - file: pages/difference
+- caption: Deployment and Limitations
+  chapters:
   - file: pages/headless-streaming
   - file: pages/known-issues
-
-- caption: ComFree Jax
-  chapters:
-  - file: pages/comfree-jax-installation
-  - file: pages/comfree-jax-usage
-  - file: pages/comfree-jax-params
-  - file: pages/comfree-jax-difference
-  - file: pages/comfree-jax-known-issues

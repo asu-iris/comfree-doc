@@ -1,23 +1,32 @@
 # ComFree Warp Usage
 
-This page shows how to use the `comfree_warp` API directly.
+This page describes the public `comfree_warp` API as implemented in the source tree.
 
-`comfree_warp` keeps the same overall workflow as `mujoco_warp`, but replaces the core solver path with the ComFree formulation. In practice, that means you still use the familiar sequence:
+At the API level, `comfree_warp` is intentionally close to `mujoco_warp`. The package reuses the MJWarp-style model/data conversion path, but replaces the forward and stepping pipeline with the ComFree contact formulation.
 
-1. Load a MuJoCo model.
-2. Convert it with `put_model` and `put_data`.
-3. Run `step` or `forward`.
-4. Copy data back with `get_data_into` if needed.
+## Workflow Overview
+
+In broad terms, the workflow is:
+
+1. Load a MuJoCo model and allocate `MjData`.
+2. Move the model and data onto device with `put_model(...)` and `put_data(...)`.
+3. Run `step(...)` or `forward(...)`.
+4. Copy one world back into MuJoCo with `get_data_into(...)` when host-side access is needed.
 
 ````{important}
-`comfree_warp` is intended to be a near drop-in alternative to `mujoco_warp`.
+`comfree_warp` is designed to be a near drop-in alternative to `mujoco_warp`, but it is not just a rename.
 
-For most core APIs, the user-facing call pattern stays the same. The main user-visible extension is on `put_model(...)`, which adds optional ComFree parameters such as `comfree_stiffness` and `comfree_damping`.
+In the current source tree:
 
-See [ComFree Contact Params Setting](cfwarp-params.md) for how these parameters are set and interpreted.
+- `put_model(...)` extends the MJWarp model with `comfree_stiffness` and `comfree_damping`
+- `put_data(...)` and `make_data(...)` reuse the MJWarp allocation path and then add ComFree-specific device buffers
+- `forward(...)` maps to `forward_comfree(...)`
+- `step(...)` maps to `step_comfree(...)`
+
+See [ComFree Contact Parameter Settings](cfwarp-params.md) for the parameter semantics of `comfree_stiffness` and `comfree_damping`.
 ````
 
-## Imports
+## Quick Start
 
 ```python
 import mujoco
@@ -32,96 +41,114 @@ import mujoco
 import warp as wp
 import comfree_warp as cfwarp
 
-# 1) Load and compile a MuJoCo model
+# 1) Load and compile a MuJoCo model, then allocate host-side runtime state
 model_path = "path/to/your/model.xml"
 mjm = mujoco.MjSpec.from_file(model_path).compile()
 mjd = mujoco.MjData(mjm)
 mujoco.mj_forward(mjm, mjd)
 
-# 2) Move model/data into ComFree Warp
+# 2) Move the model and data onto device
 m = cfwarp.put_model(
     mjm,
-    comfree_stiffness=0.1,
+    comfree_stiffness=0.2,
     comfree_damping=0.001,
 )
 d = cfwarp.put_data(mjm, mjd, nworld=1, nconmax=1000, njmax=5000)
 
-# 3) Warm up and capture a graph for fast repeated stepping
+# 3) Warm up once, then capture a Warp graph for repeated stepping
 cfwarp.step(m, d)
 cfwarp.step(m, d)
 with wp.ScopedCapture() as capture:
     cfwarp.step(m, d)
 graph = capture.graph
 
-# 4) Run simulation steps and sync back to MuJoCo data if needed
+# 4) Launch the graph and pull one world back into MuJoCo when needed
 for step_idx in range(1000):
     wp.capture_launch(graph)
     wp.synchronize()
-    cfwarp.get_data_into(mjd, mjm, d)
+    cfwarp.get_data_into(mjd, mjm, d, world_id=0)
 
-    print(f"Step {step_idx}: qpos = {d.qpos}")
+    print(f"Step {step_idx}: qpos = {mjd.qpos}")
 ```
 
-## Core APIs
+## What Changes Relative to MJWarp
 
-### `put_model(mjspec, comfree_stiffness=0.1, comfree_damping=0.001, ...)`
+From the current `api.py` implementation, the main ComFree-specific additions are:
 
-Converts a compiled MuJoCo model into a ComFree Warp model.
+- `put_model(...)` attaches `m.comfree_stiffness` and `m.comfree_damping` as device arrays
+- scalar or vector inputs are both accepted; internally they are converted with `np.atleast_1d(...)`
+- `put_data(...)` and `make_data(...)` ensure extra ComFree device fields exist
+- the additional ComFree buffers include `d.efc.efc_dist`, `d.efc.efc_mass`, `d.qvel_smooth_pred`, and `d.qfrc_total`
+- `forward(...)` runs the ComFree forward pipeline, including ComFree constraint construction and ComFree force assembly
+- `step(...)` runs the ComFree step pipeline and then integrates with the selected MJWarp integrator path
 
-Parameters:
+## API Reference
 
-- `mjspec`: compiled MuJoCo model specification
-- `comfree_stiffness`: ComFree contact stiffness, default `0.1`
-- `comfree_damping`: ComFree contact damping, default `0.001`
-- any additional arguments supported by the underlying MJWarp conversion path
+### `put_model(mjm, comfree_stiffness=0.2, comfree_damping=0.001, ...)`
 
-For the detailed meaning of `comfree_stiffness` and `comfree_damping`, including per-environment parameter usage, see [Per-Env Parameter Parallelization](cfwarp-params.md).
+Creates a device-side model from a host-side `mujoco.MjModel`, then attaches the ComFree contact parameters.
 
-Returns:
+In the current source:
 
-- a Warp-side model with ComFree parameters attached
+- `comfree_stiffness` defaults to `0.2`
+- `comfree_damping` defaults to `0.001`
+- both are stored on device as Warp arrays
+- the underlying model conversion is still performed by vendored `mujoco_warp.put_model(...)`
 
-### `put_data(mjspec, mjdata, nworld=1, nconmax=1000, njmax=5000, ...)`
+### `put_data(mjm, mjd, nworld=1, nconmax=None, nccdmax=None, njmax=None, naconmax=None, naccdmax=None)`
 
-Converts MuJoCo runtime data into a ComFree Warp data object.
+Creates a device-side `Data` object from host-side `mujoco.MjData`, using the vendored MJWarp allocation path and then adding ComFree-specific buffers.
 
-Parameters:
+This is the right entry point when you already have a host-side `MjData` whose state you want to copy onto device.
 
-- `mjspec`: MuJoCo model specification
-- `mjdata`: MuJoCo data object
-- `nworld`: number of simulation worlds
-- `nconmax`: maximum number of contacts
-- `njmax`: maximum number of constraints
+### `make_data(mjm, nworld=1, nconmax=None, nccdmax=None, njmax=None, naconmax=None, naccdmax=None)`
 
-Returns:
+Allocates a new device-side `Data` object without copying an existing host-side `MjData`.
 
-- a Warp-side data object extended with ComFree solver fields
+Use this when you want batched or freshly initialized device-side state.
 
-### `make_data(mjspec, nworld=1, nconmax=1000, njmax=5000, ...)`
+### `get_data_into(result, mjm, d, world_id=0)`
 
-Creates a new ComFree Warp data object without converting an existing `mjdata`.
+Copies one selected world from device back into an existing host-side `mujoco.MjData`.
 
-### `get_data_into(mjdata, mjspec, warp_data)`
+This function updates the provided `result` object in place. It is primarily useful for:
 
-Copies Warp-side simulation state back into MuJoCo CPU arrays.
+- debugging
+- logging
+- visualization
+- interoperability with MuJoCo-side tools
 
-Use this when you need to inspect state through MuJoCo-side tools or code.
+### `reset_data(m, d, reset=None)`
 
-### `reset_data(mjspec, warp_data)`
+Resets device-side data to defaults. The optional `reset` argument is a per-world boolean mask.
 
-Resets the simulation state.
+### `forward(m, d, factorize=True)`
 
-### `step(model, data)`
+Runs the ComFree forward pipeline without integrating one time step.
+
+From the current source, this path performs:
+
+- kinematics and smooth dynamics setup
+- collision detection
+- ComFree constraint construction
+- smooth acceleration computation
+- ComFree constraint-force assembly
+- acceleration solve
+
+### `step(m, d)`
 
 Runs one ComFree simulation step.
 
-This is one of the main places where `comfree_warp` differs internally from `mujoco_warp`: the call looks the same, but it executes the ComFree solver pipeline.
+In the current implementation, `step(...)` calls `forward_comfree(...)` and then integrates using the device-side integrator selected in the model options.
 
-### `forward(model, data)`
+At present, the ComFree step implementation supports:
 
-Runs the ComFree forward pipeline without integration.
+- Euler integration
+- `IMPLICITFAST`
 
-## Batch Example
+Other integrator modes are not documented here as supported by the current ComFree step path.
+
+## Multi-World Example
 
 ```python
 import mujoco
@@ -129,17 +156,15 @@ import warp as wp
 import comfree_warp as cfwarp
 
 mjm = mujoco.MjSpec.from_file("model.xml").compile()
-mjd = mujoco.MjData(mjm)
-mujoco.mj_forward(mjm, mjd)
 
 m = cfwarp.put_model(
     mjm,
-    comfree_stiffness=0.2,
-    comfree_damping=0.002,
+    comfree_stiffness=[0.2, 0.1],
+    comfree_damping=[0.002, 0.001],
 )
 
-nworlds = 4
-d = cfwarp.make_data(mjm, nworld=nworlds, nconmax=2000, njmax=10000)
+nworld = 4
+d = cfwarp.make_data(mjm, nworld=nworld, nconmax=2000, njmax=10000)
 
 cfwarp.step(m, d)
 cfwarp.step(m, d)
@@ -147,22 +172,20 @@ with wp.ScopedCapture() as capture:
     cfwarp.step(m, d)
 graph = capture.graph
 
+mjd = mujoco.MjData(mjm)
 for step_idx in range(500):
     wp.capture_launch(graph)
     wp.synchronize()
 
     if step_idx % 100 == 0:
-        cfwarp.get_data_into(mjd, mjm, d)
-        print(
-            f"Step {step_idx}: "
-            f"min_qpos={d.qpos.numpy().min()}, "
-            f"max_qpos={d.qpos.numpy().max()}"
-        )
+        cfwarp.get_data_into(mjd, mjm, d, world_id=0)
+        print(f"Step {step_idx}: qpos0 = {mjd.qpos[0]}")
 ```
 
-## Notes
+## Practical Notes
 
-- `comfree_stiffness` and `comfree_damping` are the main ComFree-specific additions compared with plain MJWarp.
-- `step` and `forward` keep the same role as in MJWarp, but run the ComFree solver and forward pipeline internally.
-- `get_data_into()` is useful, but CPU-GPU synchronization is relatively expensive, so use it only when needed.
-- `wp.ScopedCapture()` is recommended when you plan to repeat the same simulation step many times.
+- `comfree_warp` uses vendored `mujoco_warp` for most model/data conversion and many unchanged helper APIs.
+- The main user-facing extensions are `comfree_stiffness` and `comfree_damping` on `put_model(...)`.
+- `nworld`, `nconmax`, `njmax`, `naconmax`, and related allocation parameters follow the same basic semantics as MJWarp.
+- `get_data_into(...)` introduces host-device synchronization, so avoid calling it every step unless you actually need host-side access.
+- `wp.ScopedCapture()` is useful when you plan to repeat the same step graph many times.

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>ComFree Contact Parameter Settings &#8212; ComFree Warp Documentation</title>
+    <title>ComFree Contact Parameters &#8212; ComFree Warp Documentation</title>
   
   
   
@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'pages/cfwarp-params';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="How ComFree Warp Differs from MuJoCo Warp" href="difference.html" />
+    <link rel="next" title="How ComFree Warp Differs from MJWarp" href="difference.html" />
     <link rel="prev" title="ComFree Warp Usage" href="cfwarp-usage.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -179,13 +179,23 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ComFree Warp</span></p>
-<ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mjwarp-usage.html">MJWarp Preliminary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using ComFree Warp</span></p>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cfwarp-usage.html">ComFree Warp Usage</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">ComFree Contact Parameter Settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">ComFree Contact Parameters</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MJWarp</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="headless-streaming.html">Headless Simulation and Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="known-issues.html">Known Issues</a></li>
 </ul>
 
@@ -372,7 +382,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>ComFree Contact Parameter Settings</h1>
+    <h1>ComFree Contact Parameters</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -382,25 +392,24 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuition-first">Intuition First</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-summary">Parameter Summary</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-stiffness"><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-damping"><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-interpretation">Practical Interpretation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-the-parameters">Setting the Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-they-are-used">How They Are Used</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defaults">Defaults</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#per-environment-parameter-parallelization">Per-Environment Parameter Parallelization</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bucket-mapping-rule">Bucket Mapping Rule</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-and-vector-inputs">Scalar and Vector Inputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-world-bucket-mapping">Multi-World Bucket Mapping</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-cases">Common Cases</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#case-a-scalar-or-length-1">Case A: Scalar or length 1</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#case-b-vector-length-equals-nworld">Case B: Vector length equals <code class="docutils literal notranslate"><span class="pre">nworld</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#case-c-vector-shorter-than-nworld">Case C: Vector shorter than <code class="docutils literal notranslate"><span class="pre">nworld</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#case-d-vector-longer-than-nworld">Case D: Vector longer than <code class="docutils literal notranslate"><span class="pre">nworld</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-setting-across-all-worlds">Shared Setting Across All Worlds</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-setting-per-world">One Setting Per World</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#periodic-reuse-across-worlds">Periodic Reuse Across Worlds</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-buckets">Extra Buckets</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-recommendation">Practical Recommendation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-recommendations">Practical Recommendations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
 </ul>
             </nav>
@@ -413,112 +422,113 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="comfree-contact-parameter-settings">
-<h1>ComFree Contact Parameter Settings<a class="headerlink" href="#comfree-contact-parameter-settings" title="Link to this heading">#</a></h1>
-<p>This page explains the two main ComFree contact parameters:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="comfree-contact-parameters">
+<h1>ComFree Contact Parameters<a class="headerlink" href="#comfree-contact-parameters" title="Link to this heading">#</a></h1>
+<p>This page explains the two main ComFree contact parameters exposed by <code class="docutils literal notranslate"><span class="pre">comfree_warp.put_model(...)</span></code>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></p></li>
 </ul>
-<p>It starts with the physical intuition behind them, then explains how to pass them into <code class="docutils literal notranslate"><span class="pre">comfree_warp.put_model(...)</span></code>, and finally describes how vector-valued settings are assigned across multiple worlds.</p>
-<section id="intuition-first">
-<h2>Intuition First<a class="headerlink" href="#intuition-first" title="Link to this heading">#</a></h2>
+<p>These parameters control the strength and dissipation of the ComFree contact response. They can be provided either as scalars or as vectors for multi-world simulation.</p>
+<section id="parameter-summary">
+<h2>Parameter Summary<a class="headerlink" href="#parameter-summary" title="Link to this heading">#</a></h2>
 <section id="comfree-stiffness">
 <h3><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code><a class="headerlink" href="#comfree-stiffness" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> controls how strongly the contact resists penetration.</p>
-<p>A useful intuition is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> controls how strongly the contact response pushes against predicted penetration.</p>
+<p>In practice:</p>
 <ul class="simple">
-<li><p>higher <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> means a stiffer contact response</p></li>
-<li><p>lower <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> means a softer, more compliant contact response</p></li>
+<li><p>higher <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> produces a stiffer contact response</p></li>
+<li><p>lower <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> produces a softer, more compliant contact response</p></li>
 </ul>
-<p>So if contact feels too soft or too permissive, stiffness is usually the first parameter to increase.</p>
+<p>If contacts feel too soft or objects penetrate too much, this is usually the first parameter to increase.</p>
 </section>
 <section id="comfree-damping">
 <h3><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code><a class="headerlink" href="#comfree-damping" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> controls how much dissipation is added during contact.</p>
-<p>A useful intuition is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> controls how much damping is applied in the contact response.</p>
+<p>In practice:</p>
 <ul class="simple">
 <li><p>higher <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> usually reduces oscillation and bounce</p></li>
-<li><p>lower <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> usually allows a more lively or oscillatory response</p></li>
+<li><p>lower <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> usually produces a more lively but potentially less stable response</p></li>
 </ul>
-<p>So if contact feels too bouncy or unstable, damping is usually the first parameter to increase.</p>
+<p>If contacts feel too bouncy or oscillatory, this is usually the first parameter to increase.</p>
 </section>
 </section>
-<section id="practical-interpretation">
-<h2>Practical Interpretation<a class="headerlink" href="#practical-interpretation" title="Link to this heading">#</a></h2>
-<p>In short:</p>
+<section id="how-they-are-used">
+<h2>How They Are Used<a class="headerlink" href="#how-they-are-used" title="Link to this heading">#</a></h2>
+<p>In the current implementation, both parameters are stored as device arrays on the model and are consumed in the ComFree contact-force computation.</p>
+<p>At a high level:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> mainly changes how hard the contact pushes back</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> mainly changes how much motion is damped out during contact</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> scales the penetration-restoring part of the contact response</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> scales the velocity-damping part of the contact response</p></li>
 </ul>
-<p>These two parameters are typically tuned together.</p>
+<p>These two parameters are usually tuned together.</p>
 </section>
-<section id="imports">
-<h2>Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
+<section id="defaults">
+<h2>Defaults<a class="headerlink" href="#defaults" title="Link to this heading">#</a></h2>
+<p>If not provided to <code class="docutils literal notranslate"><span class="pre">put_model(...)</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">0.001</span></code></p></li>
+</ul>
+</section>
+<section id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h2>
+<p>Pass the parameters directly into <code class="docutils literal notranslate"><span class="pre">comfree_warp.put_model(...)</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span>
-</pre></div>
-</div>
-</section>
-<section id="setting-the-parameters">
-<h2>Setting the Parameters<a class="headerlink" href="#setting-the-parameters" title="Link to this heading">#</a></h2>
-<p>Pass the parameters into <code class="docutils literal notranslate"><span class="pre">comfree_warp.put_model(...)</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
+
+<span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;model.xml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
     <span class="n">mjm</span><span class="p">,</span>
-    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="n">comfree_damping</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Both parameters accept either:</p>
+</section>
+<section id="scalar-and-vector-inputs">
+<h2>Scalar and Vector Inputs<a class="headerlink" href="#scalar-and-vector-inputs" title="Link to this heading">#</a></h2>
+<p>Both parameters accept:</p>
 <ul class="simple">
-<li><p>a scalar, meaning the same value is used everywhere</p></li>
-<li><p>a vector, meaning values are assigned by bucket across worlds</p></li>
+<li><p>a scalar, meaning the same value is used for every world</p></li>
+<li><p>a vector, meaning values are assigned across worlds by bucket</p></li>
 </ul>
 <p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
+    <span class="n">mjm</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span>
+    <span class="n">comfree_damping</span><span class="o">=</span><span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span> <span class="pre">=</span> <span class="pre">[0.1,</span> <span class="pre">0.08,</span> <span class="pre">0.12]</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span> <span class="pre">=</span> <span class="pre">[0.001,</span> <span class="pre">0.002]</span></code></p></li>
-</ul>
-<p>This means stiffness has 3 buckets and damping has 2 buckets.</p>
-</section>
-<section id="defaults">
-<h2>Defaults<a class="headerlink" href="#defaults" title="Link to this heading">#</a></h2>
-<p>If not provided:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">0.1</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">0.001</span></code></p></li>
+<li><p>stiffness has 3 buckets</p></li>
+<li><p>damping has 2 buckets</p></li>
 </ul>
 </section>
-<section id="per-environment-parameter-parallelization">
-<h2>Per-Environment Parameter Parallelization<a class="headerlink" href="#per-environment-parameter-parallelization" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> supports per-environment parameter bucketization in multi-world simulation.</p>
-<p>The same modulo mapping pattern can be used for parameters that are stored as world-bucketed vectors.</p>
-</section>
-<section id="bucket-mapping-rule">
-<h2>Bucket Mapping Rule<a class="headerlink" href="#bucket-mapping-rule" title="Link to this heading">#</a></h2>
-<p>In multi-world simulation, the solver selects the parameter bucket with:</p>
+<section id="multi-world-bucket-mapping">
+<h2>Multi-World Bucket Mapping<a class="headerlink" href="#multi-world-bucket-mapping" title="Link to this heading">#</a></h2>
+<p>In multi-world simulation, the current implementation selects parameter values by:</p>
 <p><code class="docutils literal notranslate"><span class="pre">bucket_id</span> <span class="pre">=</span> <span class="pre">world_id</span> <span class="pre">%</span> <span class="pre">k</span></code></p>
 <p>where:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">world_id</span></code> is the simulated world index (<code class="docutils literal notranslate"><span class="pre">0..nworld-1</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">world_id</span></code> is the simulated world index</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">k</span></code> is the vector length of <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> or <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></p></li>
 </ul>
-<p>This means parameter values are reused cyclically across worlds.</p>
+<p>This means parameter buckets are reused cyclically across worlds.</p>
 </section>
 <section id="common-cases">
 <h2>Common Cases<a class="headerlink" href="#common-cases" title="Link to this heading">#</a></h2>
-<section id="case-a-scalar-or-length-1">
-<h3>Case A: Scalar or length 1<a class="headerlink" href="#case-a-scalar-or-length-1" title="Link to this heading">#</a></h3>
-<p>If you pass a scalar like <code class="docutils literal notranslate"><span class="pre">0.1</span></code>, it behaves like a vector of length <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
-<p>So every world uses the same value because:</p>
-<p><code class="docutils literal notranslate"><span class="pre">world_id</span> <span class="pre">%</span> <span class="pre">1</span> <span class="pre">==</span> <span class="pre">0</span></code></p>
+<section id="shared-setting-across-all-worlds">
+<h3>Shared Setting Across All Worlds<a class="headerlink" href="#shared-setting-across-all-worlds" title="Link to this heading">#</a></h3>
+<p>If you pass a scalar such as <code class="docutils literal notranslate"><span class="pre">0.2</span></code>, it behaves like a length-1 vector, so every world receives the same value.</p>
 </section>
-<section id="case-b-vector-length-equals-nworld">
-<h3>Case B: Vector length equals <code class="docutils literal notranslate"><span class="pre">nworld</span></code><a class="headerlink" href="#case-b-vector-length-equals-nworld" title="Link to this heading">#</a></h3>
-<p>If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">nworld</span></code>, each world gets its own bucket.</p>
-<p>Example with <code class="docutils literal notranslate"><span class="pre">nworld=4</span></code>, <code class="docutils literal notranslate"><span class="pre">k=4</span></code>:</p>
+<section id="one-setting-per-world">
+<h3>One Setting Per World<a class="headerlink" href="#one-setting-per-world" title="Link to this heading">#</a></h3>
+<p>If the vector length equals <code class="docutils literal notranslate"><span class="pre">nworld</span></code>, each world receives its own parameter bucket.</p>
+<p>Example with <code class="docutils literal notranslate"><span class="pre">nworld</span> <span class="pre">=</span> <span class="pre">4</span></code>:</p>
 <ul class="simple">
 <li><p>world 0 -&gt; bucket 0</p></li>
 <li><p>world 1 -&gt; bucket 1</p></li>
@@ -526,10 +536,10 @@ document.write(`
 <li><p>world 3 -&gt; bucket 3</p></li>
 </ul>
 </section>
-<section id="case-c-vector-shorter-than-nworld">
-<h3>Case C: Vector shorter than <code class="docutils literal notranslate"><span class="pre">nworld</span></code><a class="headerlink" href="#case-c-vector-shorter-than-nworld" title="Link to this heading">#</a></h3>
-<p>If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">&lt;</span> <span class="pre">nworld</span></code>, buckets repeat periodically.</p>
-<p>Example with <code class="docutils literal notranslate"><span class="pre">nworld=8</span></code>, <code class="docutils literal notranslate"><span class="pre">k=3</span></code>:</p>
+<section id="periodic-reuse-across-worlds">
+<h3>Periodic Reuse Across Worlds<a class="headerlink" href="#periodic-reuse-across-worlds" title="Link to this heading">#</a></h3>
+<p>If the vector length is smaller than <code class="docutils literal notranslate"><span class="pre">nworld</span></code>, the buckets repeat periodically.</p>
+<p>Example with <code class="docutils literal notranslate"><span class="pre">nworld</span> <span class="pre">=</span> <span class="pre">8</span></code> and <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">3</span></code>:</p>
 <ul class="simple">
 <li><p>world 0 -&gt; bucket 0</p></li>
 <li><p>world 1 -&gt; bucket 1</p></li>
@@ -541,40 +551,48 @@ document.write(`
 <li><p>world 7 -&gt; bucket 1</p></li>
 </ul>
 </section>
-<section id="case-d-vector-longer-than-nworld">
-<h3>Case D: Vector longer than <code class="docutils literal notranslate"><span class="pre">nworld</span></code><a class="headerlink" href="#case-d-vector-longer-than-nworld" title="Link to this heading">#</a></h3>
-<p>If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">&gt;</span> <span class="pre">nworld</span></code>, only the first <code class="docutils literal notranslate"><span class="pre">nworld</span></code> buckets are used in that run.</p>
-<p>Any extra tail buckets are valid, but unused unless <code class="docutils literal notranslate"><span class="pre">nworld</span></code> increases later.</p>
+<section id="extra-buckets">
+<h3>Extra Buckets<a class="headerlink" href="#extra-buckets" title="Link to this heading">#</a></h3>
+<p>If the vector length is larger than <code class="docutils literal notranslate"><span class="pre">nworld</span></code>, only the first <code class="docutils literal notranslate"><span class="pre">nworld</span></code> buckets are used in that run.</p>
 </section>
 </section>
-<section id="practical-recommendation">
-<h2>Practical Recommendation<a class="headerlink" href="#practical-recommendation" title="Link to this heading">#</a></h2>
+<section id="practical-recommendations">
+<h2>Practical Recommendations<a class="headerlink" href="#practical-recommendations" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>use <code class="docutils literal notranslate"><span class="pre">k=1</span></code> when you want one shared contact setting across all worlds</p></li>
-<li><p>use <code class="docutils literal notranslate"><span class="pre">k=nworld</span></code> when you want per-world tuning for sweeps or ablation experiments</p></li>
+<li><p>start with the defaults: <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span> <span class="pre">=</span> <span class="pre">0.2</span></code>, <code class="docutils literal notranslate"><span class="pre">comfree_damping</span> <span class="pre">=</span> <span class="pre">0.001</span></code></p></li>
+<li><p>increase <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> first if contacts are too soft</p></li>
+<li><p>increase <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> first if contacts are too oscillatory or too bouncy</p></li>
+<li><p>use a scalar when you want identical contact behavior across all worlds</p></li>
+<li><p>use a length-<code class="docutils literal notranslate"><span class="pre">nworld</span></code> vector when running per-world sweeps or ablations</p></li>
+<li><p>for tasks that need task-specific contact tuning, these parameters can also be tuned with learning or automated search</p></li>
 </ul>
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># From comfree_warp/test_headless.py</span>
-<span class="n">nworld</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">comfree_warp</span>
+
+<span class="n">nworld</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">njmax</span> <span class="o">=</span> <span class="mi">5000</span>
 <span class="n">nconmax</span> <span class="o">=</span> <span class="mi">1000</span>
 
-<span class="n">model_path</span> <span class="o">=</span> <span class="s2">&quot;benchmark/test_data/primitives.xml&quot;</span>
-<span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">mjm</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjSpec</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;benchmark/test_data/primitives.xml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 <span class="n">mjd</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">mjm</span><span class="p">)</span>
 <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">)</span>
 
-<span class="n">comfree_stiffness_vec</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">]</span>
-<span class="n">comfree_damping_vec</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-
 <span class="n">m</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_model</span><span class="p">(</span>
     <span class="n">mjm</span><span class="p">,</span>
-    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="n">comfree_stiffness_vec</span><span class="p">,</span>
-    <span class="n">comfree_damping</span><span class="o">=</span><span class="n">comfree_damping_vec</span><span class="p">,</span>
+    <span class="n">comfree_stiffness</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+    <span class="n">comfree_damping</span><span class="o">=</span><span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">,</span> <span class="mf">0.0015</span><span class="p">,</span> <span class="mf">0.0008</span><span class="p">],</span>
 <span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span><span class="n">mjm</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">nworld</span><span class="o">=</span><span class="n">nworld</span><span class="p">,</span> <span class="n">nconmax</span><span class="o">=</span><span class="n">nconmax</span><span class="p">,</span> <span class="n">njmax</span><span class="o">=</span><span class="n">njmax</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">comfree_warp</span><span class="o">.</span><span class="n">put_data</span><span class="p">(</span>
+    <span class="n">mjm</span><span class="p">,</span>
+    <span class="n">mjd</span><span class="p">,</span>
+    <span class="n">nworld</span><span class="o">=</span><span class="n">nworld</span><span class="p">,</span>
+    <span class="n">nconmax</span><span class="o">=</span><span class="n">nconmax</span><span class="p">,</span>
+    <span class="n">njmax</span><span class="o">=</span><span class="n">njmax</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">comfree_warp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">comfree_warp</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
@@ -632,7 +650,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How ComFree Warp Differs from MuJoCo Warp</p>
+        <p class="prev-next-title">How ComFree Warp Differs from MJWarp</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -652,25 +670,24 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuition-first">Intuition First</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-summary">Parameter Summary</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-stiffness"><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-damping"><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-interpretation">Practical Interpretation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-the-parameters">Setting the Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-they-are-used">How They Are Used</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defaults">Defaults</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#per-environment-parameter-parallelization">Per-Environment Parameter Parallelization</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bucket-mapping-rule">Bucket Mapping Rule</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-and-vector-inputs">Scalar and Vector Inputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-world-bucket-mapping">Multi-World Bucket Mapping</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-cases">Common Cases</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#case-a-scalar-or-length-1">Case A: Scalar or length 1</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#case-b-vector-length-equals-nworld">Case B: Vector length equals <code class="docutils literal notranslate"><span class="pre">nworld</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#case-c-vector-shorter-than-nworld">Case C: Vector shorter than <code class="docutils literal notranslate"><span class="pre">nworld</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#case-d-vector-longer-than-nworld">Case D: Vector longer than <code class="docutils literal notranslate"><span class="pre">nworld</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-setting-across-all-worlds">Shared Setting Across All Worlds</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-setting-per-world">One Setting Per World</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#periodic-reuse-across-worlds">Periodic Reuse Across Worlds</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-buckets">Extra Buckets</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-recommendation">Practical Recommendation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-recommendations">Practical Recommendations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
 </ul>
   </nav></div>
@@ -693,13 +710,6 @@ By ASU IRIS Lab
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   
