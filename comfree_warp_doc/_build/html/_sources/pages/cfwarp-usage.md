@@ -23,6 +23,8 @@ In the current source tree:
 - `forward(...)` maps to `forward_comfree(...)`
 - `step(...)` maps to `step_comfree(...)`
 
+Since the original MJWarp contact solver path is replaced by ComFree, some differences in contact-dynamics behavior are expected even when the API usage looks almost identical.
+
 See [ComFree Contact Parameter Settings](cfwarp-params.md) for the parameter semantics of `comfree_stiffness` and `comfree_damping`.
 ````
 

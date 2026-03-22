@@ -191,7 +191,7 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts and Comparison</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MuJoCo Warp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="difference.html">How ComFree Warp Differs from MJWarp</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment and Limitations</span></p>
 <ul class="nav bd-sidenav">
@@ -442,6 +442,7 @@ document.write(`
 <li><p><code class="docutils literal notranslate"><span class="pre">forward(...)</span></code> maps to <code class="docutils literal notranslate"><span class="pre">forward_comfree(...)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">step(...)</span></code> maps to <code class="docutils literal notranslate"><span class="pre">step_comfree(...)</span></code></p></li>
 </ul>
+<p>Since the original MJWarp contact solver path is replaced by ComFree, some differences in contact-dynamics behavior are expected even when the API usage looks almost identical.</p>
 <p>See <a class="reference internal" href="cfwarp-params.html"><span class="std std-doc">ComFree Contact Parameter Settings</span></a> for the parameter semantics of <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code>.</p>
 </div>
 </section>

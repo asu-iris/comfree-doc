@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -392,11 +392,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-summary">Parameter Summary</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-stiffness"><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-damping"><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-summary">Parameter Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-they-are-used">How They Are Used</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defaults">Defaults</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic Usage</a></li>
@@ -432,8 +428,9 @@ document.write(`
 <p>These parameters control the strength and dissipation of the ComFree contact response. They can be provided either as scalars or as vectors for multi-world simulation.</p>
 <section id="parameter-summary">
 <h2>Parameter Summary<a class="headerlink" href="#parameter-summary" title="Link to this heading">#</a></h2>
-<section id="comfree-stiffness">
-<h3><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code><a class="headerlink" href="#comfree-stiffness" title="Link to this heading">#</a></h3>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<h3 class="rubric" id="comfree-stiffness"><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></h3>
 <p><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> controls how strongly the contact response pushes against predicted penetration.</p>
 <p>In practice:</p>
 <ul class="simple">
@@ -441,9 +438,8 @@ document.write(`
 <li><p>lower <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> produces a softer, more compliant contact response</p></li>
 </ul>
 <p>If contacts feel too soft or objects penetrate too much, this is usually the first parameter to increase.</p>
-</section>
-<section id="comfree-damping">
-<h3><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code><a class="headerlink" href="#comfree-damping" title="Link to this heading">#</a></h3>
+<p>In our experience, tuning should usually stay around the default value rather than jumping to much larger values. If <code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code> is made too large, the simulation can become unstable or diverge.</p>
+<h3 class="rubric" id="comfree-damping"><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></h3>
 <p><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> controls how much damping is applied in the contact response.</p>
 <p>In practice:</p>
 <ul class="simple">
@@ -451,7 +447,8 @@ document.write(`
 <li><p>lower <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> usually produces a more lively but potentially less stable response</p></li>
 </ul>
 <p>If contacts feel too bouncy or oscillatory, this is usually the first parameter to increase.</p>
-</section>
+<p>We recommend tuning <code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code> around its default value as well. In our experience, damping is relatively sensitive and cannot be made very large before simulation quality degrades or the rollout diverges.</p>
+</div>
 </section>
 <section id="how-they-are-used">
 <h2>How They Are Used<a class="headerlink" href="#how-they-are-used" title="Link to this heading">#</a></h2>
@@ -670,11 +667,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-summary">Parameter Summary</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-stiffness"><code class="docutils literal notranslate"><span class="pre">comfree_stiffness</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comfree-damping"><code class="docutils literal notranslate"><span class="pre">comfree_damping</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-summary">Parameter Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-they-are-used">How They Are Used</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defaults">Defaults</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic Usage</a></li>

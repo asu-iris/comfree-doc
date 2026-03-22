@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -427,7 +427,7 @@ document.write(`
 </section>
 <section id="tradeoffs-and-recommendation">
 <h2>Tradeoffs and Recommendation<a class="headerlink" href="#tradeoffs-and-recommendation" title="Link to this heading">#</a></h2>
-<p>While <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. If simulation speed is not a primary concern, we recommend continuing to use MuJoCo (Warp).</p>
+<p>While <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. Because <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> replaces the original contact solver with the ComFree formulation, some contact-dynamics behavior differences relative to MuJoCo are expected. In general, we find ComFree tends to produce more dynamic contact behavior than MuJoCo.</p>
 <p>At the same time, ComFree is an evolving open project, and we warmly welcome contributions from the community to improve robustness, expand features, and broaden application support.</p>
 </section>
 <section id="potential-applications">

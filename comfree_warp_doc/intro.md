@@ -16,7 +16,7 @@ Built in Warp and exposed through a MuJoCo-compatible interface, `comfree_warp` 
 
 ## Tradeoffs and Recommendation
 
-While `comfree_warp` excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. If simulation speed is not a primary concern, we recommend continuing to use MuJoCo (Warp).
+While `comfree_warp` excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. Because `comfree_warp` replaces the original contact solver with the ComFree formulation, some contact-dynamics behavior differences relative to MuJoCo are expected. In general, we find ComFree tends to produce more dynamic contact behavior than MuJoCo. 
 
 At the same time, ComFree is an evolving open project, and we warmly welcome contributions from the community to improve robustness, expand features, and broaden application support.
 

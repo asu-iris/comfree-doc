@@ -32,6 +32,8 @@ As a rule of thumb:
 
 Because ComFree uses an impedance-style contact handling mechanism rather than a complementarity or optimization-complete solver,  very small dynamics drift can occur in some cases. This should be treated as an expected tradeoff of the complementarity-free formulation rather than as an automatic sign of a bug.
 
+More broadly, because `comfree_warp` replaces the original MJWarp contact solver with ComFree, some differences in contact-dynamics behavior are expected relative to MJWarp. Differences in contact force profiles, penetration recovery, sticking/sliding transitions, or settling behavior do not automatically indicate an implementation problem.
+
 This can potentially be fixed or further reduced in future development.
 
 

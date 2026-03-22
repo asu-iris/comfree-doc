@@ -24,6 +24,8 @@ That is why most MJWarp code can be adapted with only small changes.
 `comfree_warp` should be thought of as a near drop-in MJWarp alternative, not as a completely separate simulator interface.
 
 However, it is not just a rename of MJWarp. The ComFree wrapper changes model parameters, data fields, and the forward/step implementation.
+
+Because the original MJWarp contact solver path is replaced by the ComFree formulation, some contact-dynamics behavior differences are expected. Matching the MJWarp interface does not imply identical contact response.
 ````
 
 ## Public API Structure
@@ -66,6 +68,7 @@ The practical comparison is:
 - extra ComFree parameters on `put_model(...)`
 - extra ComFree buffers in device-side data
 - different internal contact-resolution behavior in `forward(...)` and `step(...)`
+
 
 ## What Stays the Same
 

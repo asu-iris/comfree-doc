@@ -9,6 +9,8 @@ These parameters control the strength and dissipation of the ComFree contact res
 
 ## Parameter Summary
 
+````{important}
+
 ### `comfree_stiffness`
 
 `comfree_stiffness` controls how strongly the contact response pushes against predicted penetration.
@@ -20,6 +22,8 @@ In practice:
 
 If contacts feel too soft or objects penetrate too much, this is usually the first parameter to increase.
 
+In our experience, tuning should usually stay around the default value rather than jumping to much larger values. If `comfree_stiffness` is made too large, the simulation can become unstable or diverge.
+
 ### `comfree_damping`
 
 `comfree_damping` controls how much damping is applied in the contact response.
@@ -30,6 +34,10 @@ In practice:
 - lower `comfree_damping` usually produces a more lively but potentially less stable response
 
 If contacts feel too bouncy or oscillatory, this is usually the first parameter to increase.
+
+We recommend tuning `comfree_damping` around its default value as well. In our experience, damping is relatively sensitive and cannot be made very large before simulation quality degrades or the rollout diverges.
+
+````
 
 ## How They Are Used
 
