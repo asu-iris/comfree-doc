@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -252,7 +252,7 @@
       
       
       
-      <li><a href="https://github.com/asu-iris/comfree-doc" target="_blank"
+      <li><a href="https://github.com/asu-iris/comfree_warp" target="_blank"
    class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -269,7 +269,7 @@
       
       
       
-      <li><a href="https://github.com/asu-iris/comfree-doc/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/asu-iris/comfree_warp/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -394,6 +394,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">Resources</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-comfree-warp">Why ComFree Warp</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tradeoffs-and-recommendation">Tradeoffs and Recommendation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#potential-applications">Potential Applications</a></li>
@@ -421,13 +422,22 @@ document.write(`
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>ComFree-Sim is a GPU-parallel analytical contact physics engine for scalable contact-rich robotics simulation and control. It replaces iterative complementarity-based contact resolution with a complementarity-free analytical formulation that computes contact impulses in closed form, enabling near-linear scaling with contact count in dense-contact scenes.</p>
 </section>
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Project Website: <a class="reference external" href="https://irislab.tech/comfree-sim/">https://irislab.tech/comfree-sim/</a></p></li>
+<li><p>Documentation: <a class="reference external" href="https://irislab.tech/comfree-doc/intro.html">https://irislab.tech/comfree-doc/intro.html</a></p></li>
+<li><p>Paper (arXiv): <a class="reference external" href="https://arxiv.org/abs/2603.12185">https://arxiv.org/abs/2603.12185</a></p></li>
+<li><p>YouTube: <a class="reference external" href="https://youtu.be/Li6twWyLCpA?si=OHjYfk5-ixsLEcu4">https://youtu.be/Li6twWyLCpA?si=OHjYfk5-ixsLEcu4</a></p></li>
+</ul>
+</section>
 <section id="why-comfree-warp">
 <h2>Why ComFree Warp<a class="headerlink" href="#why-comfree-warp" title="Link to this heading">#</a></h2>
 <p>Built in Warp and exposed through a MuJoCo-compatible interface, <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> can be used as a drop-in backend alternative to MuJoCo Warp (MJWarp). It inherits most of the features provided by MJWarp, while replacing the contact dynamics resolution stage with a complementarity-free contact formulation. This flattened contact-resolution pipeline delivers more than 2x higher throughput than MJWarp while maintaining comparable and tunable physical fidelity.</p>
 </section>
 <section id="tradeoffs-and-recommendation">
 <h2>Tradeoffs and Recommendation<a class="headerlink" href="#tradeoffs-and-recommendation" title="Link to this heading">#</a></h2>
-<p>While <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. Because <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> replaces the original contact solver with the ComFree formulation, some contact-dynamics behavior differences relative to MuJoCo are expected. In general, we find ComFree tends to produce more dynamic contact behavior than MuJoCo.</p>
+<p>While <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. Because <code class="docutils literal notranslate"><span class="pre">comfree_warp</span></code> replaces the original contact solver with the ComFree formulation, some contact-dynamics behavior differences relative to MuJoCo are expected. In general, we find ComFree tends to produce more dynamic contact behavior than MuJoCo. If simulation speed is not a primary concern, we recommend continuing to use MuJoCo (Warp).</p>
 <p>At the same time, ComFree is an evolving open project, and we warmly welcome contributions from the community to improve robustness, expand features, and broaden application support.</p>
 </section>
 <section id="potential-applications">
@@ -538,6 +548,7 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">Resources</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-comfree-warp">Why ComFree Warp</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tradeoffs-and-recommendation">Tradeoffs and Recommendation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#potential-applications">Potential Applications</a></li>

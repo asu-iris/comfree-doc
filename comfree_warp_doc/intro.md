@@ -10,13 +10,20 @@
 
 ComFree-Sim is a GPU-parallel analytical contact physics engine for scalable contact-rich robotics simulation and control. It replaces iterative complementarity-based contact resolution with a complementarity-free analytical formulation that computes contact impulses in closed form, enabling near-linear scaling with contact count in dense-contact scenes.
 
+## Resources
+
+- Project Website: [https://irislab.tech/comfree-sim/](https://irislab.tech/comfree-sim/)
+- Documentation: [https://irislab.tech/comfree-doc/intro.html](https://irislab.tech/comfree-doc/intro.html)
+- Paper (arXiv): [https://arxiv.org/abs/2603.12185](https://arxiv.org/abs/2603.12185)
+- YouTube: [https://youtu.be/Li6twWyLCpA?si=OHjYfk5-ixsLEcu4](https://youtu.be/Li6twWyLCpA?si=OHjYfk5-ixsLEcu4)
+
 ## Why ComFree Warp
 
 Built in Warp and exposed through a MuJoCo-compatible interface, `comfree_warp` can be used as a drop-in backend alternative to MuJoCo Warp (MJWarp). It inherits most of the features provided by MJWarp, while replacing the contact dynamics resolution stage with a complementarity-free contact formulation. This flattened contact-resolution pipeline delivers more than 2x higher throughput than MJWarp while maintaining comparable and tunable physical fidelity.
 
 ## Tradeoffs and Recommendation
 
-While `comfree_warp` excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. Because `comfree_warp` replaces the original contact solver with the ComFree formulation, some contact-dynamics behavior differences relative to MuJoCo are expected. In general, we find ComFree tends to produce more dynamic contact behavior than MuJoCo. 
+While `comfree_warp` excels in speed, it may also be more prone to instability and require more manual tuning than the more mature and well-maintained MuJoCo stack. Because `comfree_warp` replaces the original contact solver with the ComFree formulation, some contact-dynamics behavior differences relative to MuJoCo are expected. In general, we find ComFree tends to produce more dynamic contact behavior than MuJoCo. If simulation speed is not a primary concern, we recommend continuing to use MuJoCo (Warp).
 
 At the same time, ComFree is an evolving open project, and we warmly welcome contributions from the community to improve robustness, expand features, and broaden application support.
 
